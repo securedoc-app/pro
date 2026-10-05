@@ -1,0 +1,3441 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SecureDoc — Consola segura</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link
+      id="bootstrap-css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Aplica el tema (Bootswatch) guardado antes de pintar el cuerpo, para evitar parpadeo -->
+    <script src="js/theme.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link href="css/app.css" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- ============ REGISTRO (asistente 5 pasos) ============ -->
+    <div id="register-screen" class="d-none">
+      <div class="container py-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-xl-7">
+            <div class="text-center mb-4">
+              <div class="brand-icon mb-3">
+                <i class="bi bi-shield-lock-fill"></i>
+              </div>
+              <h1 class="h3 fw-bold">Crear tu cuenta segura</h1>
+              <p class="text-muted">
+                Configura tu acceso, tus credenciales y tu perfil paso a paso
+              </p>
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                id="btn-manual"
+                data-manual=""
+              >
+                <i class="bi bi-book me-1"></i> Manual general
+              </button>
+            </div>
+
+            <div class="steps-bar mb-4">
+              <div class="step-item">
+                <div class="step-circle active" id="sc-1">1</div>
+                <div class="step-label">Clave</div>
+              </div>
+              <div class="step-line" id="sl-1"></div>
+              <div class="step-item">
+                <div class="step-circle" id="sc-2">2</div>
+                <div class="step-label">Frase</div>
+              </div>
+              <div class="step-line" id="sl-2"></div>
+              <div class="step-item">
+                <div class="step-circle" id="sc-3">3</div>
+                <div class="step-label">GitHub</div>
+              </div>
+              <div class="step-line" id="sl-3"></div>
+              <div class="step-item">
+                <div class="step-circle" id="sc-4">4</div>
+                <div class="step-label">Firebase</div>
+              </div>
+              <div class="step-line" id="sl-4"></div>
+              <div class="step-item">
+                <div class="step-circle" id="sc-5">5</div>
+                <div class="step-label">Perfil</div>
+              </div>
+            </div>
+
+            <div class="card shadow-sm wizard-card">
+              <div class="card-body p-4 p-md-5">
+                <!-- PASO 1 -->
+                <div id="step-1" class="step-content">
+                  <div class="text-center mb-4">
+                    <div class="step-icon-wrapper mb-3">
+                      <i class="bi bi-key-fill step-icon"></i>
+                    </div>
+                    <h2 class="h4 fw-bold">Paso 1: Clave de acceso</h2>
+                    <p class="text-muted">
+                      Tu contraseña de inicio de sesión. Debe ser fuerte.
+                    </p>
+                  </div>
+                  <details class="step-help mb-3" data-help="1">
+                    <summary>
+                      <i class="bi bi-question-circle me-1"></i> Ayuda para este
+                      paso
+                    </summary>
+                    <div class="step-help-body"></div>
+                  </details>
+                  <div class="mb-3">
+                    <label class="form-label fw-medium"
+                      >Correo electrónico</label
+                    >
+                    <input
+                      type="email"
+                      class="form-control form-control-lg"
+                      id="reg-email"
+                      placeholder="tu@email.com"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-medium">Contraseña</label>
+                    <div class="input-group input-group-lg">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="reg-password"
+                        placeholder="Mínimo 8 caracteres"
+                      />
+                      <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        id="tg-1"
+                      >
+                        <i class="bi bi-eye"></i>
+                      </button>
+                    </div>
+                    <div class="strength-bar mt-2">
+                      <div class="strength-track">
+                        <div class="strength-fill" id="str-fill"></div>
+                      </div>
+                      <div class="strength-label" id="str-label">
+                        Ingresa una contraseña
+                      </div>
+                    </div>
+                    <div class="password-checks mt-3">
+                      <div class="check-item" id="chk-length">
+                        <i class="bi bi-circle"></i> Mínimo 8 caracteres
+                      </div>
+                      <div class="check-item" id="chk-upper">
+                        <i class="bi bi-circle"></i> Una mayúscula
+                      </div>
+                      <div class="check-item" id="chk-lower">
+                        <i class="bi bi-circle"></i> Una minúscula
+                      </div>
+                      <div class="check-item" id="chk-number">
+                        <i class="bi bi-circle"></i> Un número
+                      </div>
+                      <div class="check-item" id="chk-special">
+                        <i class="bi bi-circle"></i> Un símbolo
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-medium"
+                      >Confirmar contraseña</label
+                    >
+                    <div class="input-group input-group-lg">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="reg-password2"
+                        placeholder="Repite tu contraseña"
+                      />
+                      <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        id="tg-2"
+                      >
+                        <i class="bi bi-eye"></i>
+                      </button>
+                    </div>
+                    <div
+                      class="invalid-feedback d-block"
+                      id="err-password2"
+                      style="display: none"
+                    ></div>
+                  </div>
+                  <div class="d-grid mt-4">
+                    <button class="btn btn-primary btn-lg" id="btn-1" disabled>
+                      Continuar <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
+                  <div class="text-center mt-3">
+                    <a href="#" id="to-login" class="small"
+                      >¿Ya tienes cuenta? <strong>Inicia sesión</strong></a
+                    >
+                  </div>
+                </div>
+
+                <!-- PASO 2 -->
+                <div id="step-2" class="step-content d-none">
+                  <div class="text-center mb-4">
+                    <div class="step-icon-wrapper mb-3">
+                      <i class="bi bi-file-earmark-lock-fill step-icon"></i>
+                    </div>
+                    <h2 class="h4 fw-bold">Paso 2: Frase de encriptado</h2>
+                    <p class="text-muted">
+                      No se almacena. Cifra tus credenciales. Sin ella nadie
+                      puede descifrarlas, ni nosotros.
+                    </p>
+                  </div>
+                  <details class="step-help mb-3" data-help="2">
+                    <summary>
+                      <i class="bi bi-question-circle me-1"></i> Ayuda para este
+                      paso
+                    </summary>
+                    <div class="step-help-body"></div>
+                  </details>
+                  <div class="alert alert-warning d-flex align-items-start">
+                    <i class="bi bi-exclamation-triangle-fill me-2 mt-1"></i>
+                    <div>
+                      <strong>¡Importante!</strong> Si la olvidas, no podrás
+                      recuperar tus credenciales. Guárdala bien.
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-medium"
+                      >Frase de encriptado</label
+                    >
+                    <div class="input-group input-group-lg">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="enc-phrase"
+                        placeholder="Frase memorable"
+                      />
+                      <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        id="tg-3"
+                      >
+                        <i class="bi bi-eye"></i>
+                      </button>
+                    </div>
+                    <div class="phrase-quality mt-2">
+                      <div class="d-flex align-items-center">
+                        <span class="me-2 small fw-medium">Entropía:</span>
+                        <div class="strength-track flex-grow-1">
+                          <div class="strength-fill" id="ph-fill"></div>
+                        </div>
+                        <span class="ms-2 small" id="ph-label">—</span>
+                      </div>
+                    </div>
+                    <div
+                      class="invalid-feedback d-block"
+                      id="err-phrase"
+                      style="display: none"
+                    ></div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-medium">Confirmar frase</label>
+                    <div class="input-group input-group-lg">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="enc-phrase2"
+                        placeholder="Repite tu frase"
+                      />
+                      <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        id="tg-4"
+                      >
+                        <i class="bi bi-eye"></i>
+                      </button>
+                    </div>
+                    <div
+                      class="invalid-feedback d-block"
+                      id="err-phrase2"
+                      style="display: none"
+                    ></div>
+                  </div>
+                  <div class="d-flex gap-2 mt-4">
+                    <button
+                      class="btn btn-outline-secondary btn-lg flex-fill"
+                      id="bk-2"
+                    >
+                      <i class="bi bi-arrow-left me-1"></i> Atrás
+                    </button>
+                    <button
+                      class="btn btn-primary btn-lg flex-fill"
+                      id="btn-2"
+                      disabled
+                    >
+                      Continuar <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- PASO 3 -->
+                <div id="step-3" class="step-content d-none">
+                  <div class="text-center mb-4">
+                    <div class="step-icon-wrapper mb-3">
+                      <i class="bi bi-github step-icon"></i>
+                    </div>
+                    <h2 class="h4 fw-bold">Paso 3: GitHub</h2>
+                    <p class="text-muted">
+                      Usuario y token. Se guardarán <strong>cifrados</strong>.
+                      Necesita permisos para crear repos y escribir contenido.
+                    </p>
+                  </div>
+                  <details class="step-help mb-3" data-help="3">
+                    <summary>
+                      <i class="bi bi-question-circle me-1"></i> ¿Cómo creo la
+                      cuenta y el token de GitHub?
+                    </summary>
+                    <div class="step-help-body"></div>
+                  </details>
+                  <div class="alert alert-info small">
+                    <i class="bi bi-info-circle-fill me-1"></i>
+                    Token clásico con scope <code>repo</code> (más
+                    <code>delete_repo</code> si quieres poder eliminar
+                    repositorios desde la app), o fine-grained con
+                    <strong>Administration</strong> +
+                    <strong>Contents (write)</strong> + <strong>Pages</strong>.
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-medium"
+                      >Usuario de GitHub</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control form-control-lg"
+                      id="gh-user"
+                      placeholder="tu-usuario"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-medium">Token de acceso</label>
+                    <div class="input-group input-group-lg">
+                      <input
+                        type="password"
+                        class="form-control"
+                        id="gh-token"
+                        placeholder="ghp_..."
+                      />
+                      <button
+                        class="btn btn-outline-secondary"
+                        type="button"
+                        id="tg-5"
+                      >
+                        <i class="bi bi-eye"></i>
+                      </button>
+                    </div>
+                    <div
+                      class="invalid-feedback d-block"
+                      id="err-gh"
+                      style="display: none"
+                    ></div>
+                    <div class="form-text" id="gh-status"></div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-medium" for="gh-expires"
+                      >Fecha de vencimiento del token</label
+                    >
+                    <input
+                      type="date"
+                      class="form-control form-control-lg"
+                      id="gh-expires"
+                    />
+                    <div class="form-check mt-2">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="gh-noexp"
+                      />
+                      <label class="form-check-label" for="gh-noexp"
+                        >Mi token no vence</label
+                      >
+                    </div>
+                    <div class="form-text">
+                      Al crear el token, GitHub te muestra su fecha de
+                      vencimiento. Te avisaremos unos días antes para que lo
+                      renueves.
+                    </div>
+                    <div
+                      class="invalid-feedback d-block"
+                      id="err-gh-exp"
+                      style="display: none"
+                    ></div>
+                  </div>
+                  <div class="d-flex gap-2 mt-4">
+                    <button
+                      class="btn btn-outline-secondary btn-lg flex-fill"
+                      id="bk-3"
+                    >
+                      <i class="bi bi-arrow-left me-1"></i> Atrás
+                    </button>
+                    <button class="btn btn-primary btn-lg flex-fill" id="btn-3">
+                      <i class="bi bi-check2 me-1"></i> Validar y continuar
+                    </button>
+                  </div>
+                </div>
+
+                <!-- PASO 4 -->
+                <div id="step-4" class="step-content d-none">
+                  <div class="text-center mb-4">
+                    <div class="step-icon-wrapper mb-3">
+                      <i class="bi bi-fire step-icon"></i>
+                    </div>
+                    <h2 class="h4 fw-bold">Paso 4: Tu Firebase</h2>
+                    <p class="text-muted">
+                      Tu propia base de datos. La configuración se guardará
+                      <strong>cifrada</strong>.
+                    </p>
+                  </div>
+                  <details class="step-help mb-3" data-help="4">
+                    <summary>
+                      <i class="bi bi-question-circle me-1"></i> ¿Cómo creo el
+                      proyecto y obtengo esta configuración?
+                    </summary>
+                    <div class="step-help-body"></div>
+                  </details>
+                  <div class="alert alert-info small">
+                    <i class="bi bi-info-circle-fill me-1"></i>
+                    Pégala desde Firebase Console > Configuración del proyecto >
+                    Tus apps (config web).
+                  </div>
+                  <div class="row g-2">
+                    <div class="col-md-6">
+                      <input
+                        class="form-control"
+                        id="fb-apiKey"
+                        placeholder="apiKey"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <input
+                        class="form-control"
+                        id="fb-authDomain"
+                        placeholder="authDomain"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <input
+                        class="form-control"
+                        id="fb-projectId"
+                        placeholder="projectId"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <input
+                        class="form-control"
+                        id="fb-storageBucket"
+                        placeholder="storageBucket"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <input
+                        class="form-control"
+                        id="fb-messagingSenderId"
+                        placeholder="messagingSenderId"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <input
+                        class="form-control"
+                        id="fb-appId"
+                        placeholder="appId"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-text mt-2">
+                    ¿Prefieres pegar el objeto completo?
+                  </div>
+                  <textarea
+                    class="form-control mt-1 font-monospace"
+                    id="fb-paste"
+                    rows="3"
+                    placeholder='Pega aquí: { "apiKey": "...", ... } y se rellenan los campos'
+                  ></textarea>
+                  <div
+                    class="invalid-feedback d-block"
+                    id="err-fb"
+                    style="display: none"
+                  ></div>
+                  <div class="form-text" id="fb-status"></div>
+                  <div class="d-flex gap-2 mt-4">
+                    <button
+                      class="btn btn-outline-secondary btn-lg flex-fill"
+                      id="bk-4"
+                    >
+                      <i class="bi bi-arrow-left me-1"></i> Atrás
+                    </button>
+                    <button class="btn btn-primary btn-lg flex-fill" id="btn-4">
+                      <i class="bi bi-check2 me-1"></i> Validar y continuar
+                    </button>
+                  </div>
+                </div>
+
+                <!-- PASO 4 (parte 2): proteger el Firebase -->
+                <div id="step-4b" class="step-content d-none">
+                  <div class="text-center mb-4">
+                    <div class="step-icon-wrapper mb-3">
+                      <i class="bi bi-shield-lock-fill step-icon"></i>
+                    </div>
+                    <h2 class="h4 fw-bold">Paso 4: Protege tu Firebase</h2>
+                    <p class="text-muted">
+                      SecureDoc entrará a tu base de datos con su
+                      <strong>propia cuenta</strong> y nadie más podrá leerla ni
+                      escribirla.
+                    </p>
+                  </div>
+                  <details class="step-help mb-3" data-help="4b">
+                    <summary>
+                      <i class="bi bi-question-circle me-1"></i> ¿Cómo activo el
+                      acceso y publico las reglas?
+                    </summary>
+                    <div class="step-help-body"></div>
+                  </details>
+                  <div id="fbs-reg-body"></div>
+                  <div class="d-flex gap-2 mt-4">
+                    <button
+                      class="btn btn-outline-secondary btn-lg flex-fill"
+                      id="bk-4b"
+                    >
+                      <i class="bi bi-arrow-left me-1"></i> Atrás
+                    </button>
+                    <button
+                      class="btn btn-primary btn-lg flex-fill"
+                      id="btn-4b"
+                      disabled
+                    >
+                      <i class="bi bi-check2 me-1"></i> Continuar
+                    </button>
+                  </div>
+                </div>
+
+                <!-- PASO 5 -->
+                <div id="step-5" class="step-content d-none">
+                  <div class="text-center mb-4">
+                    <div class="step-icon-wrapper mb-3">
+                      <i class="bi bi-person-badge-fill step-icon"></i>
+                    </div>
+                    <h2 class="h4 fw-bold">Paso 5: Tu perfil</h2>
+                    <p class="text-muted">
+                      Nombre y foto. Se guardarán en tu repositorio privado
+                      <code>securedoc</code>.
+                    </p>
+                  </div>
+                  <details class="step-help mb-3" data-help="5">
+                    <summary>
+                      <i class="bi bi-question-circle me-1"></i> Ayuda para este
+                      paso
+                    </summary>
+                    <div class="step-help-body"></div>
+                  </details>
+                  <div class="text-center mb-3">
+                    <img
+                      id="avatar-preview"
+                      class="avatar-preview"
+                      alt="avatar"
+                    />
+                    <div>
+                      <label
+                        for="pf-photo"
+                        class="btn btn-outline-secondary btn-sm mt-2"
+                        ><i class="bi bi-camera me-1"></i> Elegir foto</label
+                      >
+                    </div>
+                    <input
+                      type="file"
+                      id="pf-photo"
+                      accept="image/*"
+                      class="d-none"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-medium">Nombre</label>
+                    <input
+                      class="form-control form-control-lg"
+                      id="pf-name"
+                      placeholder="Tu nombre"
+                    />
+                  </div>
+                  <div class="d-flex gap-2 mt-4">
+                    <button
+                      class="btn btn-outline-secondary btn-lg flex-fill"
+                      id="bk-5"
+                    >
+                      <i class="bi bi-arrow-left me-1"></i> Atrás
+                    </button>
+                    <button
+                      class="btn btn-success btn-lg flex-fill"
+                      id="btn-complete"
+                    >
+                      <i class="bi bi-shield-lock-fill me-1"></i> Crear cuenta
+                    </button>
+                  </div>
+                </div>
+
+                <!-- ÉXITO -->
+                <div id="step-ok" class="step-content d-none">
+                  <div class="text-center py-4">
+                    <div class="success-icon-wrapper mb-3">
+                      <i class="bi bi-check-circle-fill success-icon"></i>
+                    </div>
+                    <h2 class="h4 fw-bold">¡Cuenta creada!</h2>
+                    <p class="text-muted">
+                      Tu repositorio <code>securedoc</code> fue creado y tus
+                      credenciales quedaron cifradas.
+                    </p>
+                    <button class="btn btn-primary btn-lg" id="btn-go-dash">
+                      <i class="bi bi-house-fill me-1"></i> Ir a la consola
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-3">
+              <small class="text-muted"
+                ><i class="bi bi-shield-fill-check me-1"></i> AES-256-GCM en tu
+                navegador antes de guardar</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ LOGIN ============ -->
+    <div id="login-screen" class="d-none">
+      <div class="container py-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-7">
+            <div class="text-center mb-4">
+              <div class="brand-icon mb-3">
+                <i class="bi bi-shield-lock-fill"></i>
+              </div>
+              <h1 class="h3 fw-bold">Iniciar sesión</h1>
+            </div>
+            <div class="card shadow-sm">
+              <div class="card-body p-4">
+                <div class="mb-3">
+                  <label class="form-label fw-medium">Correo</label>
+                  <input
+                    type="email"
+                    class="form-control form-control-lg"
+                    id="login-email"
+                    placeholder="tu@email.com"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label fw-medium">Contraseña</label>
+                  <div class="input-group input-group-lg">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="login-password"
+                      placeholder="Tu contraseña"
+                    />
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      id="tg-login"
+                    >
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="d-grid">
+                  <button class="btn btn-primary btn-lg" id="btn-login">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Entrar
+                  </button>
+                </div>
+                <div class="text-center mt-3">
+                  <a href="#" id="to-forgot-password" class="small text-muted"
+                    >¿Olvidaste tu contraseña?</a
+                  >
+                </div>
+                <div class="text-center mt-2">
+                  <a href="#" id="to-register" class="small"
+                    >¿No tienes cuenta? <strong>Crear una</strong></a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VERIFICAR FRASE ============ -->
+    <div id="verify-screen" class="d-none">
+      <div class="container py-5">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-7">
+            <div class="text-center mb-4">
+              <div class="brand-icon mb-3">
+                <i class="bi bi-unlock-fill"></i>
+              </div>
+              <h1 class="h3 fw-bold">Desbloquear</h1>
+              <p class="text-muted">Introduce tu frase de encriptado</p>
+            </div>
+            <div class="card shadow-sm">
+              <div class="card-body p-4">
+                <div class="alert alert-warning small">
+                  <i class="bi bi-exclamation-triangle-fill me-1"></i> La frase
+                  se usa solo en tu navegador. Nunca se envía al servidor.
+                </div>
+                <div class="mb-3">
+                  <div class="input-group input-group-lg">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="verify-phrase"
+                      placeholder="Tu frase de encriptado"
+                    />
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      id="tg-verify"
+                    >
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  <div
+                    class="invalid-feedback d-block"
+                    id="err-verify"
+                    style="display: none"
+                  ></div>
+                </div>
+                <div class="d-grid">
+                  <button class="btn btn-primary btn-lg" id="btn-verify">
+                    <i class="bi bi-unlock-fill me-1"></i> Descifrar
+                  </button>
+                </div>
+                <div class="text-center mt-3 small">
+                  <a href="#" class="link-danger" id="btn-forgot-phrase"
+                    >¿Olvidaste tu frase? Eliminar mi cuenta y empezar de
+                    nuevo</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ CONSOLA / DASHBOARD ============ -->
+    <div id="dashboard-screen" class="d-none">
+      <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="#"
+            ><i class="bi bi-shield-lock-fill me-2"></i>SecureDoc</a
+          >
+          <div class="d-flex align-items-center">
+            <span class="text-light me-3 small" id="nav-email"></span>
+            <button class="btn btn-outline-light btn-sm" id="btn-logout">
+              <i class="bi bi-box-arrow-right me-1"></i>Salir
+            </button>
+          </div>
+        </div>
+      </nav>
+      <div class="container py-4">
+        <div id="dash-locked" class="card shadow-sm">
+          <div class="card-body text-center py-5">
+            <i class="bi bi-lock-fill display-1 text-muted"></i>
+            <h5 class="mt-3">Datos cifrados</h5>
+            <p class="text-muted">
+              Introduce tu frase para desbloquear la consola
+            </p>
+            <button class="btn btn-primary" id="btn-unlock">
+              <i class="bi bi-unlock-fill me-1"></i>Desbloquear
+            </button>
+          </div>
+        </div>
+
+        <div id="dash-unlocked" class="d-none">
+          <!-- Aviso de vencimiento del token de GitHub -->
+          <div
+            id="token-alert"
+            class="alert d-none align-items-center gap-2 flex-wrap"
+            role="alert"
+          >
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span id="token-alert-text" class="flex-grow-1"></span>
+            <button
+              type="button"
+              class="btn btn-sm btn-dark"
+              id="token-alert-change"
+            >
+              Cambiar token
+            </button>
+            <button
+              type="button"
+              class="btn-close"
+              id="token-alert-close"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+
+          <!-- Aviso: Firebase del usuario sin proteger -->
+          <div
+            id="fb-secure-alert"
+            class="alert alert-warning d-none align-items-center gap-2 flex-wrap"
+            role="alert"
+          >
+            <i class="bi bi-shield-exclamation"></i>
+            <span class="flex-grow-1"
+              >Tu Firebase
+              <strong
+                class="font-monospace"
+                id="fb-secure-alert-project"
+              ></strong>
+              aún no está protegido con la cuenta de SecureDoc: las aplicaciones
+              no podrán usar tus datos hasta que lo configures.</span
+            >
+            <button
+              type="button"
+              class="btn btn-sm btn-dark"
+              id="fb-secure-alert-btn"
+            >
+              Proteger ahora
+            </button>
+          </div>
+
+          <!-- Navegación principal: franja de color de marca -->
+          <div
+            class="d-flex flex-wrap align-items-center gap-2 mb-4 main-nav-bar px-3 py-2"
+          >
+            <ul class="nav nav-pills main-nav" id="main-nav">
+              <li class="nav-item">
+                <button type="button" class="nav-link" data-section="diseno">
+                  <i class="bi bi-code-slash me-1"></i>Desarrollo
+                </button>
+              </li>
+              <li class="nav-item">
+                <button
+                  type="button"
+                  class="nav-link"
+                  data-section="aplicaciones"
+                >
+                  <i class="bi bi-grid-3x3-gap-fill me-1"></i>Aplicaciones
+                </button>
+              </li>
+              <li class="nav-item">
+                <button type="button" class="nav-link" data-section="archivos">
+                  <i class="bi bi-folder-fill me-1"></i>Archivos
+                </button>
+              </li>
+            </ul>
+            <div class="ms-auto d-flex gap-2">
+              <button
+                type="button"
+                class="btn btn-outline-light btn-sm"
+                data-section="config"
+                id="btn-config"
+              >
+                <i class="bi bi-gear-fill me-1"></i>Configuración
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-light btn-sm"
+                id="btn-lock"
+              >
+                <i class="bi bi-lock-fill me-1"></i>Bloquear
+              </button>
+            </div>
+          </div>
+
+          <!-- Desarrollo (proyectos con repositorio de desarrollo privado y de producción público) -->
+          <section id="sec-diseno" data-section-pane class="d-none">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2"
+                >
+                  <h5 class="mb-0">
+                    <i class="bi bi-code-slash me-2"></i>Proyectos
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn btn-success btn-sm"
+                    id="btn-new-project"
+                  >
+                    <i class="bi bi-plus-lg me-1"></i>Nuevo proyecto
+                  </button>
+                </div>
+                <p class="text-muted small mb-2">
+                  Aquí creas tus aplicaciones. Solo describe con tus palabras
+                  qué necesitas y nosotros preparamos todo por ti: tu espacio de
+                  trabajo privado y la página lista para usar.
+                  <button
+                    class="btn btn-link btn-sm p-0 align-baseline text-decoration-none"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#dev-howto"
+                    aria-expanded="false"
+                    aria-controls="dev-howto"
+                  >
+                    ¿Cómo funciona por dentro?
+                  </button>
+                </p>
+                <div class="collapse" id="dev-howto">
+                  <p class="text-muted small mb-3 border-start ps-2">
+                    Cada proyecto tiene un repositorio de
+                    <strong>desarrollo</strong> (privado, con tu código en
+                    <code>src/</code>) y uno de
+                    <strong>producción</strong> (público, publicado con GitHub
+                    Pages, con el código minificado y ofuscado). Al subir
+                    cambios a <code>src/</code>, GitHub Actions publica solo.
+                  </p>
+                </div>
+                <div id="dev-list" class="list-group"></div>
+                <div id="dev-empty" class="text-center text-muted py-4">
+                  <i class="bi bi-code-square display-6"></i>
+                  <p class="mb-0 small">
+                    Aún no has creado ninguna aplicación. Empieza describiendo
+                    tu idea.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card shadow-sm mt-4">
+              <div class="card-body">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2"
+                >
+                  <h5 class="mb-0">
+                    <i class="bi bi-boxes me-2"></i>Bibliotecas
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn btn-success btn-sm"
+                    id="btn-new-lib"
+                  >
+                    <i class="bi bi-plus-lg me-1"></i>Nueva librería
+                  </button>
+                </div>
+                <p class="text-muted small mb-2">
+                  Componentes que puedes reutilizar entre tus apps: un input
+                  numérico con aritmética, una tabla con totales, una consulta
+                  de tasa de cambio, etc. Una vez publicada una librería,
+                  puedes pedirle a tu IA que la use al definir una nueva app
+                  (en "Definir" te la sugerirá).
+                </p>
+                <div id="libs-list" class="list-group"></div>
+                <div id="libs-empty" class="text-center text-muted py-4">
+                  <i class="bi bi-boxes display-6"></i>
+                  <p class="mb-0 small">
+                    Aún no has publicado ninguna librería.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Aplicaciones -->
+          <section id="sec-aplicaciones" data-section-pane class="d-none">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-3"
+                >
+                  <h5 class="mb-0">
+                    <i class="bi bi-grid-3x3-gap-fill me-2"></i>Tus aplicaciones
+                  </h5>
+                  <div class="d-flex gap-2">
+                    <button
+                      class="btn btn-outline-primary btn-sm"
+                      id="btn-open-catalog"
+                    >
+                      <i class="bi bi-shop-window me-1"></i>Catálogo
+                    </button>
+                    <button
+                      class="btn btn-outline-primary btn-sm"
+                      id="btn-new-app"
+                    >
+                      <i class="bi bi-hammer me-1"></i>Crear en Desarrollo
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="form-check form-switch mb-3"
+                  id="apps-fav-switch-box"
+                >
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="chk-fav-only"
+                  />
+                  <label class="form-check-label small" for="chk-fav-only">
+                    <i class="bi bi-star-fill text-warning me-1"></i>Mostrar
+                    solo favoritas
+                  </label>
+                </div>
+                <p class="small text-muted">
+                  Estas apps son personales y se ejecutan dentro de la consola
+                  sobre tus datos privados. Cada una corre aislada y sin salir a
+                  Internet. Toma nuevas apps del <strong>catálogo</strong> de
+                  apps publicadas por otros usuarios: se guarda una copia y sus
+                  datos quedan en tu base de datos. Marca la estrella de una
+                  app para señalarla como favorita.
+                </p>
+                <div id="apps-list" class="row g-3"></div>
+                <div id="apps-empty" class="text-center text-muted py-4">
+                  <i class="bi bi-inbox display-6"></i>
+                  <p class="mb-0">
+                    Todavía no has publicado ninguna app. Créala y publícala
+                    desde <strong>Desarrollo</strong>, o tómala del
+                    <strong>catálogo</strong>, y aparecerá aquí.
+                  </p>
+                </div>
+                <div
+                  id="apps-empty-fav"
+                  class="text-center text-muted py-4 d-none"
+                >
+                  <i class="bi bi-star display-6"></i>
+                  <p class="mb-0">
+                    No tienes apps favoritas todavía. Marca la estrella de una
+                    app para verla aquí.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Archivos -->
+          <section id="sec-archivos" data-section-pane class="d-none">
+            <div class="row g-4">
+              <div class="col-lg-4">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-3"
+                    >
+                      <h5 class="mb-0">
+                        <i class="bi bi-hdd-stack-fill me-2"></i>Repositorios
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn btn-success btn-sm"
+                        id="btn-new-repo"
+                      >
+                        <i class="bi bi-plus-lg me-1"></i>Nuevo
+                      </button>
+                    </div>
+                    <div id="repo-list" class="list-group"></div>
+                    <div id="repo-empty" class="text-center text-muted py-4">
+                      <i class="bi bi-inbox display-6"></i>
+                      <p class="mb-0 small">
+                        Aún no tienes repositorios de archivos. Crea el primero.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-8">
+                <div class="card shadow-sm h-100">
+                  <div class="card-body">
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2"
+                    >
+                      <h5 class="mb-0">
+                        <i class="bi bi-folder2 me-2"></i>Carpetas
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn btn-success btn-sm d-none"
+                        id="btn-new-folder"
+                      >
+                        <i class="bi bi-plus-lg me-1"></i>Nueva
+                      </button>
+                    </div>
+                    <div id="files-none" class="text-center text-muted py-4">
+                      <i class="bi bi-folder2-open display-6"></i>
+                      <p class="mb-0 small">
+                        Selecciona o crea un repositorio para ver y guardar tus
+                        documentos.
+                      </p>
+                    </div>
+                    <div id="files-panel" class="d-none">
+                      <div class="d-flex align-items-center flex-wrap mb-3">
+                        <span
+                          class="font-monospace small"
+                          id="files-repo-name"
+                        ></span>
+                        <span class="badge ms-2" id="files-repo-badge"></span>
+                        <div class="ms-auto d-flex align-items-center">
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-outline-success d-none"
+                            id="btn-enable-pages"
+                          >
+                            <i class="bi bi-rocket-takeoff me-1"></i>Publicar
+                            desde main
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        id="folder-bar"
+                        class="d-flex flex-wrap gap-2 align-items-center"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Documentos: ancho completo, debajo de repositorios y carpetas -->
+              <div class="col-12 d-none" id="docs-card">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2"
+                    >
+                      <h5 class="mb-0">
+                        <i class="bi bi-files me-2"></i>Documentos
+                        <span
+                          class="fs-6 fw-normal text-muted ms-2 font-monospace"
+                          id="docs-where"
+                        ></span>
+                      </h5>
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-sm"
+                        id="btn-open-upload"
+                      >
+                        <i class="bi bi-cloud-arrow-up-fill me-1"></i>Subir
+                        documento
+                      </button>
+                    </div>
+                    <div class="small text-muted mb-2">
+                      <i class="bi bi-cloud-arrow-up me-1"></i>Arrastra aquí uno
+                      o varios archivos para subirlos a
+                      <strong id="drop-target">la raíz</strong>.
+                    </div>
+                    <div id="drop-zone" class="drop-zone">
+                      <div id="doc-list"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Configuración: datos del perfil y conexiones -->
+          <section id="sec-config" data-section-pane class="d-none">
+            <div class="row g-4">
+              <div class="col-lg-5">
+                <div class="card shadow-sm h-100">
+                  <div class="card-body text-center">
+                    <h6 class="text-muted text-uppercase small mb-3">Perfil</h6>
+                    <img
+                      id="dash-avatar"
+                      class="avatar-preview mb-2"
+                      alt="avatar"
+                    />
+                    <div class="mb-2">
+                      <label
+                        for="cfg-photo"
+                        class="btn btn-outline-secondary btn-sm"
+                        ><i class="bi bi-camera me-1"></i> Cambiar
+                        foto/logo</label
+                      >
+                    </div>
+                    <input
+                      type="file"
+                      id="cfg-photo"
+                      accept="image/*"
+                      class="d-none"
+                    />
+                    <h5 class="mb-0" id="dash-name"></h5>
+                    <p class="text-muted small mb-0" id="dash-ghuser"></p>
+                    <div class="mt-3 small">
+                      <div class="text-muted">Alias público (catálogo)</div>
+                      <div
+                        class="d-flex align-items-center gap-2 flex-wrap justify-content-center"
+                      >
+                        <span id="cat-alias-current">No configurado</span>
+                        <button
+                          class="btn btn-sm btn-outline-secondary"
+                          id="btn-edit-cat-alias"
+                          type="button"
+                        >
+                          <i class="bi bi-pencil me-1"></i>Editar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-7">
+                <div class="card shadow-sm h-100">
+                  <div class="card-body">
+                    <h6 class="text-muted text-uppercase small mb-3">
+                      Conexiones
+                    </h6>
+                    <div class="small">
+                      <div class="text-muted">Repositorio de perfil</div>
+                      <a
+                        href="#"
+                        id="link-securedoc"
+                        target="_blank"
+                        rel="noopener"
+                        class="font-monospace"
+                        >securedoc</a
+                      >
+                      <div class="text-muted mt-3">Token de GitHub</div>
+                      <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <span class="font-monospace">••••••••••••</span>
+                        <span class="text-muted">(guardado cifrado)</span>
+                        <button
+                          class="btn btn-sm btn-outline-secondary"
+                          id="btn-change-token"
+                          type="button"
+                        >
+                          <i class="bi bi-key me-1"></i>Cambiar token
+                        </button>
+                      </div>
+                      <div
+                        class="mt-2 d-flex align-items-center gap-2 flex-wrap"
+                      >
+                        <span id="tk-exp-info">—</span>
+                        <button
+                          class="btn btn-link btn-sm p-0"
+                          id="btn-change-expiry"
+                          type="button"
+                        >
+                          Editar vencimiento
+                        </button>
+                      </div>
+                      <div class="text-muted mt-3">Firebase del usuario</div>
+                      <div class="font-monospace" id="dash-fb-project">—</div>
+                      <div
+                        class="mt-2 d-flex align-items-center gap-2 flex-wrap"
+                      >
+                        <span id="fb-access-info">—</span>
+                        <button
+                          class="btn btn-sm btn-outline-secondary"
+                          id="btn-fb-secure"
+                          type="button"
+                        >
+                          <i class="bi bi-shield-check me-1"></i
+                          ><span id="btn-fb-secure-text"
+                            >Configurar acceso seguro</span
+                          >
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Apariencia: tema visual (Bootswatch) -->
+            <div class="card shadow-sm mt-4">
+              <div class="card-body">
+                <h6 class="text-muted text-uppercase small mb-3">
+                  <i class="bi bi-palette-fill me-1"></i>Apariencia
+                </h6>
+                <div class="row align-items-center g-3">
+                  <div class="col-md-6">
+                    <label for="theme-select" class="form-label mb-1"
+                      >Tema visual</label
+                    >
+                    <select
+                      id="theme-select"
+                      class="form-select"
+                      aria-label="Tema visual"
+                    ></select>
+                    <div class="form-text">
+                      Temas de
+                      <a
+                        href="https://bootswatch.com/"
+                        target="_blank"
+                        rel="noopener"
+                        >Bootswatch</a
+                      >
+                      para Bootstrap 5. Se guarda en este navegador y se aplica
+                      al instante.
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="border rounded p-3">
+                      <div class="small text-muted mb-2">Vista previa</div>
+                      <div class="d-flex flex-wrap gap-2 align-items-center">
+                        <button type="button" class="btn btn-primary btn-sm">
+                          Primario
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm">
+                          Secundario
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm">
+                          Éxito
+                        </button>
+                        <span class="badge bg-danger">Aviso</span>
+                        <span class="badge bg-info">Info</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Zona de peligro: retirarse de la app -->
+            <div class="card border-danger shadow-sm mt-4">
+              <div class="card-body">
+                <h6 class="text-danger text-uppercase small mb-2">
+                  <i class="bi bi-exclamation-triangle-fill me-1"></i>Zona de
+                  peligro
+                </h6>
+                <div
+                  class="d-flex align-items-center justify-content-between gap-3 flex-wrap"
+                >
+                  <div class="small">
+                    <strong>Retirarme de SecureDoc</strong>
+                    <div class="text-muted">
+                      Elimina tu cuenta y tus datos cifrados de la plataforma.
+                      Es irreversible.
+                    </div>
+                  </div>
+                  <button
+                    class="btn btn-outline-danger btn-sm"
+                    id="btn-retire"
+                    type="button"
+                  >
+                    <i class="bi bi-person-x me-1"></i>Retirarme
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ MANUAL GENERAL DE REGISTRO ============ -->
+    <div
+      class="modal fade"
+      id="manualModal"
+      tabindex="-1"
+      aria-labelledby="manual-title"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="manual-title">
+              <i class="bi bi-book me-2"></i>Manual general de registro
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <nav
+              id="manual-toc"
+              class="manual-toc mb-3"
+              aria-label="Contenido del manual"
+            ></nav>
+            <div id="manual-body" class="manual-body"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ DESARROLLO: modales y menú ============ -->
+    <div id="dev-menu" class="doc-menu d-none" role="menu"></div>
+    <input type="file" id="dev-upload-input" class="d-none" multiple />
+
+    <div class="modal fade" id="devNewModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-code-slash me-2"></i>Nuevo proyecto
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted small mb-3">
+              Cuéntanos qué quieres crear. No necesitas saber de programación:
+              descríbelo con tus palabras y preparamos todo por ti.<br />Estas
+              aplicaciones son para tu <strong>uso personal</strong>: para
+              llevar una gestión tuya, del día a día o de tu trabajo. Son de
+              alcance sencillo y pensadas para un solo usuario —tú—, no para
+              administrar varias personas.
+            </p>
+            <div class="mb-3">
+              <label class="form-label" for="dp-name"
+                >Dale un nombre a la aplicación personal que quieres
+                crear</label
+              >
+              <input
+                class="form-control"
+                id="dp-name"
+                placeholder="Ej.: control de incidencias"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <div class="form-text">
+                Un nombre corto y sencillo para reconocerla en tu lista.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="dp-brief"
+                >Enumera qué debe ayudarte a resolver esa aplicación</label
+              >
+              <textarea
+                class="form-control"
+                id="dp-brief"
+                rows="5"
+                placeholder="Ej.: Quiero llevar el registro de las incidencias de mi equipo (fecha, responsable y estado) y ver un tablero con cuántas hay abiertas cada mes."
+              ></textarea>
+              <div class="form-text">
+                Para ayudarte, piensa en:
+                <ul class="mb-0 ps-3">
+                  <li>¿Qué gestión o tarea quieres resolver?</li>
+                  <li>
+                    ¿Qué información vas a manejar (fechas, nombres, montos,
+                    estados…)?
+                  </li>
+                  <li>
+                    ¿Qué te gustaría ver o consultar (listados, informes,
+                    indicadores)?
+                  </li>
+                  <li>¿Necesitas compartir algo con otras personas?</li>
+                </ul>
+              </div>
+            </div>
+            <div class="alert alert-light border small d-flex gap-2 mb-3">
+              <i class="bi bi-stars text-primary"></i>
+              <div>
+                Al crear el proyecto preparamos tu espacio de trabajo privado.
+                Después, la IA te acompañará para construir la aplicación: armar
+                las indicaciones, ir ajustando y subir todo por ti.
+              </div>
+            </div>
+            <div class="mb-2">
+              <button
+                class="btn btn-link btn-sm p-0 text-decoration-none"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#dp-advanced"
+                aria-expanded="false"
+                aria-controls="dp-advanced"
+              >
+                <i class="bi bi-sliders me-1"></i>Opciones avanzadas (opcional)
+              </button>
+            </div>
+            <div class="collapse" id="dp-advanced">
+              <div class="border rounded p-3 mb-2 bg-light">
+                <p class="small text-muted mb-2">
+                  Esto lo preparamos automáticamente; sólo tócalo si sabes lo
+                  que haces.
+                </p>
+                <div class="small mb-3">
+                  <div>
+                    <i class="bi bi-lock-fill me-1"></i>Espacio de trabajo
+                    privado: <span class="font-monospace" id="dp-dev">—</span>
+                  </div>
+                  <div>
+                    <i class="bi bi-globe2 me-1"></i>Página publicada (lo que se
+                    ve): <span class="font-monospace" id="dp-prod">—</span>
+                  </div>
+                </div>
+                <div class="form-check mb-3">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="dp-obf"
+                    checked
+                  />
+                  <label class="form-check-label" for="dp-obf"
+                    >Proteger el código publicado para que no se copie
+                    fácilmente</label
+                  >
+                </div>
+                <div class="alert alert-info small mb-0">
+                  <i class="bi bi-info-circle me-1"></i>Para publicar tu página,
+                  GitHub necesita escribir en el repositorio de producción:
+                  guardamos una copia <strong>cifrada</strong> de tu token como
+                  secreto del repositorio de desarrollo. Tu token necesita los
+                  permisos <code>repo</code> y <code>workflow</code> (o
+                  Administration, Contents, Pages, Workflows, Secrets y Actions
+                  si es fine-grained).
+                </div>
+              </div>
+            </div>
+            <div
+              class="invalid-feedback d-block"
+              id="dp-err"
+              style="display: none"
+            ></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-success" id="btn-create-project">
+              <i class="bi bi-plus-lg me-1"></i>Crear mi proyecto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Construir con IA: pantalla de preparación (fabrica el prompt para llevar a una IA externa) -->
+    <div class="modal fade" id="devBuildModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div>
+              <h5 class="modal-title">
+                <i class="bi bi-stars me-2 text-primary"></i>Construir con
+                IA<span class="text-muted">
+                  · <span id="bp-title">—</span></span
+                >
+              </h5>
+              <span class="badge text-bg-light border mt-1"
+                ><i class="bi bi-person me-1"></i>Uso personal · un solo
+                usuario</span
+              >
+            </div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="steps-bar mb-4">
+              <div class="step-item">
+                <div class="step-circle active" id="bp-sc-1">1</div>
+                <div class="step-label">Definir la solicitud</div>
+              </div>
+              <div class="step-line" id="bp-sl-1"></div>
+              <div class="step-item">
+                <div class="step-circle" id="bp-sc-2">2</div>
+                <div class="step-label">Generar la app</div>
+              </div>
+            </div>
+
+            <!-- ===================== ETAPA 1: DEFINIR LA SOLICITUD ===================== -->
+            <div id="bpstep-1">
+              <p class="text-muted small mb-3">
+                Primero definimos <strong>qué</strong> debe hacer tu aplicación
+                conversando con tu IA de confianza (sin hablar de tecnología).
+                Genera el prompt de definición, dialoga con tu IA hasta que te
+                entregue una <strong>especificación funcional</strong> en JSON,
+                y pégala abajo.
+              </p>
+
+              <div class="mb-3">
+                <label class="form-label" for="bp-brief"
+                  >Cuéntame tu idea: ¿qué debe ayudarte a resolver esta
+                  aplicación?</label
+                >
+                <textarea
+                  class="form-control"
+                  id="bp-brief"
+                  rows="4"
+                  placeholder="Descríbelo con tus palabras. Puede ser una idea general; tu IA te ayudará a completarla."
+                ></textarea>
+              </div>
+
+              <!-- Servicios externos (API con token) de esta app: registro sin
+                   secretos; lo pinta js/services-ui.js -->
+              <div id="bp-services" class="mb-3"></div>
+
+              <button
+                class="btn btn-primary"
+                id="btn-discovery-generate"
+                type="button"
+              >
+                <i class="bi bi-chat-dots me-1"></i>Generar prompt de definición
+              </button>
+              <div
+                class="invalid-feedback d-block"
+                id="bp-disc-err"
+                style="display: none"
+              ></div>
+
+              <div id="bp-discovery-result" class="mt-3 d-none">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2"
+                >
+                  <strong
+                    ><i class="bi bi-card-text me-1"></i>Prompt de definición
+                    (llévalo a tu IA)</strong
+                  >
+                  <div class="d-flex gap-2">
+                    <button
+                      class="btn btn-sm btn-outline-secondary"
+                      id="btn-disc-copy"
+                      type="button"
+                    >
+                      <i class="bi bi-clipboard me-1"></i>Copiar
+                    </button>
+                    <button
+                      class="btn btn-sm btn-outline-secondary"
+                      id="btn-disc-download"
+                      type="button"
+                    >
+                      <i class="bi bi-download me-1"></i>Descargar
+                    </button>
+                  </div>
+                </div>
+                <textarea
+                  class="form-control font-monospace small"
+                  id="bp-discovery-prompt"
+                  rows="10"
+                  readonly
+                  spellcheck="false"
+                ></textarea>
+                <div class="form-text">
+                  Copia este texto en tu IA y conversa con ella sobre la
+                  funcionalidad. Cuando te pida confirmar, te entregará la
+                  definición en un bloque <code>```json … ```</code>. Pégalo
+                  abajo.
+                </div>
+              </div>
+
+              <hr class="my-3" />
+
+              <div class="mb-2">
+                <strong
+                  ><i class="bi bi-box-arrow-in-down me-1"></i>Pega aquí la
+                  definición (JSON) que te dio tu IA</strong
+                >
+              </div>
+              <textarea
+                class="form-control font-monospace small"
+                id="bp-spec"
+                rows="8"
+                spellcheck="false"
+                placeholder="Pega el bloque JSON completo (con o sin las comillas ```)…"
+              ></textarea>
+              <div
+                class="invalid-feedback d-block"
+                id="bp-spec-err"
+                style="display: none"
+              ></div>
+              <div class="d-flex gap-2 mt-2">
+                <button
+                  class="btn btn-outline-primary"
+                  id="btn-spec-parse"
+                  type="button"
+                >
+                  <i class="bi bi-check2-circle me-1"></i>Leer definición
+                </button>
+              </div>
+
+              <div id="bp-spec-summary" class="mt-3 d-none">
+                <div class="border rounded p-3 bg-light">
+                  <div
+                    class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2"
+                  >
+                    <div>
+                      <strong id="bp-sum-name">—</strong>
+                      <div class="small text-muted" id="bp-sum-resumen"></div>
+                    </div>
+                    <span class="badge" id="bp-sum-complexity">—</span>
+                  </div>
+                  <div class="row g-3 small">
+                    <div class="col-md-6">
+                      <div class="text-muted mb-1">
+                        <i class="bi bi-database me-1"></i>Datos (entidades)
+                      </div>
+                      <ul class="mb-0 ps-3" id="bp-sum-entidades"></ul>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="text-muted mb-1">
+                        <i class="bi bi-window-stack me-1"></i>Pantallas
+                      </div>
+                      <ul class="mb-0 ps-3" id="bp-sum-pantallas"></ul>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="text-muted mb-1">
+                        <i class="bi bi-list-check me-1"></i>Menú
+                      </div>
+                      <ul class="mb-0 ps-3" id="bp-sum-menu"></ul>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="text-muted mb-1">
+                        <i class="bi bi-plugin me-1"></i>Servicios externos
+                      </div>
+                      <ul class="mb-0 ps-3" id="bp-sum-servicios"></ul>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="text-muted mb-1">
+                        <i class="bi bi-boxes me-1"></i>Librerías a usar
+                      </div>
+                      <ul class="mb-0 ps-3" id="bp-sum-librerias"></ul>
+                    </div>
+                  </div>
+                  <div
+                    id="bp-spec-warn"
+                    class="alert alert-warning small mt-3 mb-0 d-none"
+                  >
+                    <div class="fw-semibold mb-1">
+                      <i class="bi bi-exclamation-triangle me-1"></i>Avisos
+                    </div>
+                    <ul class="mb-0 ps-3" id="bp-spec-warn-list"></ul>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end mt-3">
+                  <button
+                    class="btn btn-primary"
+                    id="btn-goto-generate"
+                    type="button"
+                  >
+                    Continuar a generar<i class="bi bi-arrow-right ms-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- ===================== ETAPA 2: GENERAR LA APP ===================== -->
+            <div id="bpstep-2" class="d-none">
+              <button
+                class="btn btn-link btn-sm p-0 text-decoration-none mb-2"
+                id="btn-back-define"
+                type="button"
+              >
+                <i class="bi bi-arrow-left me-1"></i>Volver a la definición
+              </button>
+
+              <div
+                id="bp-complexity"
+                class="alert alert-info small d-flex gap-2"
+              >
+                <i class="bi bi-info-circle"></i>
+                <div id="bp-complexity-text">—</div>
+              </div>
+
+              <div id="bp-mode-box" class="mb-3 d-none">
+                <div class="mb-2">
+                  <strong
+                    ><i class="bi bi-diagram-3 me-1"></i>¿Cómo quieres
+                    generarla?</strong
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="bp-mode"
+                    id="bp-mode-single"
+                    value="single"
+                    checked
+                  />
+                  <label class="form-check-label" for="bp-mode-single"
+                    >De un solo tiro (un único prompt que devuelve la app
+                    completa)</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="bp-mode"
+                    id="bp-mode-pieces"
+                    value="pieces"
+                  />
+                  <label class="form-check-label" for="bp-mode-pieces"
+                    >Por piezas (un prompt por parte; luego uno las piezas en la
+                    app final)</label
+                  >
+                </div>
+              </div>
+
+              <!-- Modo de un solo tiro -->
+              <div id="bp-single-box">
+                <button
+                  class="btn btn-primary"
+                  id="btn-dev-generate"
+                  type="button"
+                >
+                  <i class="bi bi-magic me-1"></i>Generar prompt de desarrollo
+                </button>
+                <div
+                  class="invalid-feedback d-block"
+                  id="bp-dev-err"
+                  style="display: none"
+                ></div>
+                <div id="bp-prompt-box" class="mt-3 d-none">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2"
+                  >
+                    <strong
+                      ><i class="bi bi-card-text me-1"></i>Prompt de desarrollo
+                      (llévalo a tu IA)</strong
+                    >
+                    <div class="d-flex gap-2">
+                      <button
+                        class="btn btn-sm btn-outline-secondary"
+                        id="btn-prompt-copy"
+                        type="button"
+                      >
+                        <i class="bi bi-clipboard me-1"></i>Copiar
+                      </button>
+                      <button
+                        class="btn btn-sm btn-outline-secondary"
+                        id="btn-prompt-download"
+                        type="button"
+                      >
+                        <i class="bi bi-download me-1"></i>Descargar
+                      </button>
+                    </div>
+                  </div>
+                  <textarea
+                    class="form-control font-monospace small"
+                    id="bp-prompt"
+                    rows="12"
+                    readonly
+                    spellcheck="false"
+                  ></textarea>
+                  <div class="form-text">
+                    Los marcadores como <code>__FIREBASE_CONFIG__</code> y
+                    <code>__COLECCION__</code> se sustituyen automáticamente al
+                    traer el código; no los toques.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modo por piezas -->
+              <div id="bp-pieces-box" class="d-none">
+                <button
+                  class="btn btn-primary"
+                  id="btn-pieces-generate"
+                  type="button"
+                >
+                  <i class="bi bi-grid-1x2 me-1"></i>Generar los prompts por
+                  piezas
+                </button>
+                <div
+                  class="invalid-feedback d-block"
+                  id="bp-pieces-err"
+                  style="display: none"
+                ></div>
+                <div id="bp-pieces-list" class="mt-3"></div>
+                <div id="bp-assemble-box" class="d-none mt-2">
+                  <button
+                    class="btn btn-outline-primary"
+                    id="btn-assemble"
+                    type="button"
+                  >
+                    <i class="bi bi-boxes me-1"></i>Unir las piezas en la app
+                    final
+                  </button>
+                  <div class="form-text">
+                    Pega el código (bloque <code>&lt;script&gt;</code>) que te
+                    dio tu IA en cada pieza y luego únelas. El resultado
+                    aparecerá abajo para previsualizar y publicar.
+                  </div>
+                </div>
+              </div>
+
+              <hr class="my-3" />
+
+              <div id="bp-receive">
+                <strong
+                  ><i class="bi bi-box-arrow-in-down me-1"></i>Trae el código de
+                  tu IA</strong
+                >
+                <p class="form-text mt-1 mb-2">
+                  Pega el <code>index.html</code> completo que te devolvió tu IA
+                  (con o sin las comillas <code>```</code>). Si generaste por
+                  piezas, este campo se rellena solo al unirlas. Lo prepararemos
+                  sustituyendo los marcadores, lo revisaremos y podrás
+                  previsualizarlo antes de publicar.
+                </p>
+                <textarea
+                  class="form-control font-monospace small"
+                  id="bp-code"
+                  rows="8"
+                  spellcheck="false"
+                  placeholder="Pega aquí el código devuelto por tu IA…"
+                ></textarea>
+                <div
+                  class="invalid-feedback d-block"
+                  id="bp-code-err"
+                  style="display: none"
+                ></div>
+                <div class="d-flex gap-2 mt-2">
+                  <button
+                    class="btn btn-outline-primary"
+                    id="btn-code-prepare"
+                    type="button"
+                  >
+                    <i class="bi bi-eye me-1"></i>Preparar y previsualizar
+                  </button>
+                </div>
+
+                <div
+                  id="bp-code-warn"
+                  class="alert alert-warning small mt-3 d-none"
+                >
+                  <div class="d-flex gap-2">
+                    <i class="bi bi-shield-exclamation"></i>
+                    <div>
+                      <strong
+                        >Revisa estas advertencias de seguridad antes de
+                        publicar:</strong
+                      >
+                      <ul class="mb-2 mt-1" id="bp-code-warn-list"></ul>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="bp-code-override"
+                        />
+                        <label class="form-check-label" for="bp-code-override"
+                          >Entiendo los riesgos y quiero publicar de todos
+                          modos.</label
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  id="bp-code-info"
+                  class="alert alert-info small mt-3 d-none"
+                ></div>
+
+                <div id="bp-preview-box" class="mt-3 d-none">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-2"
+                  >
+                    <strong
+                      ><i class="bi bi-window me-1"></i>Vista previa</strong
+                    >
+                    <span class="form-text m-0"
+                      >Ejecución real con <strong>datos de prueba</strong> (no
+                      toca tus datos reales). Al publicar, la app pasa a
+                      producción y usa tus datos reales.</span
+                    >
+                  </div>
+                  <iframe
+                    id="bp-preview"
+                    title="Vista previa"
+                    sandbox="allow-scripts allow-forms allow-popups allow-modals"
+                    style="
+                      width: 100%;
+                      height: 360px;
+                      border: 1px solid var(--bs-border-color);
+                      border-radius: 0.5rem;
+                      background: #fff;
+                    "
+                  ></iframe>
+                  <div class="d-flex gap-2 mt-2">
+                    <button
+                      class="btn btn-primary"
+                      id="btn-code-publish"
+                      type="button"
+                    >
+                      <i class="bi bi-rocket-takeoff me-1"></i>Publicar a
+                      producción
+                    </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      id="btn-code-download"
+                      type="button"
+                    >
+                      <i class="bi bi-download me-1"></i>Descargar index.html
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="collapse mt-3" id="bp-advanced">
+                <div class="border rounded p-3 bg-light small text-muted">
+                  <div>
+                    <i class="bi bi-database me-1"></i>Los datos se guardarán en
+                    tu Firestore, colección
+                    <span class="font-monospace" id="bp-collection">—</span>.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="alert alert-light border small d-flex gap-2 mt-3 mb-0">
+              <i class="bi bi-exclamation-triangle text-warning"></i>
+              <div>
+                No pegues en tu IA tu frase de cifrado, tus claves reales ni
+                datos personales reales. Los prompts ya están preparados para
+                que no haga falta.
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="devDeleteModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-exclamation-octagon-fill me-2 text-danger"></i
+              >Eliminar proyecto
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-2">
+              Se quitará <strong id="dd-name"></strong> de tu lista de
+              proyectos.
+            </p>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="dd-repos" />
+              <label class="form-check-label" for="dd-repos"
+                >También eliminar de GitHub los repositorios
+                <span class="font-monospace" id="dd-repolist"></span
+              ></label>
+            </div>
+            <div id="dd-confirm-box" class="d-none">
+              <div class="alert alert-danger small">
+                <strong>Irreversible.</strong> Se borran ambos repositorios con
+                todo su historial y el sitio publicado deja de funcionar.
+                Necesita el permiso <code>delete_repo</code>.
+              </div>
+              <label class="form-label" for="dd-confirm"
+                >Para confirmar, escribe el nombre del proyecto:
+                <strong class="font-monospace" id="dd-confirm-name"></strong
+              ></label>
+              <input
+                class="form-control"
+                id="dd-confirm"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+            <div class="form-text" id="dd-keep-note">
+              Sin marcar, los repositorios se conservan en GitHub y solo dejan
+              de aparecer aquí.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-danger" id="btn-confirm-delete-project">
+              <i class="bi bi-trash3 me-1"></i>Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nueva / editar librería -->
+    <div class="modal fade" id="libModal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="libModalTitle">
+              <i class="bi bi-boxes me-2 text-primary"></i>Nueva librería
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted small mb-3">
+              Describe el componente y te preparamos el prompt para tu IA. El
+              código que te devuelva se publica en tu propio repositorio
+              público de librerías, y queda disponible para usarlo desde
+              cualquiera de tus apps.
+            </p>
+            <div class="mb-2">
+              <label class="form-label" for="lib-nombre">Nombre</label>
+              <input
+                class="form-control"
+                id="lib-nombre"
+                placeholder="Ej. Input Numérico"
+                autocomplete="off"
+              />
+            </div>
+            <div class="mb-2">
+              <strong class="small d-block mb-1">Tipo de librería</strong>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="lib-tipo"
+                  id="lib-tipo-ui"
+                  value="ui"
+                  checked
+                />
+                <label class="form-check-label" for="lib-tipo-ui"
+                  >Componente visual (etiqueta HTML)</label
+                >
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="lib-tipo"
+                  id="lib-tipo-datos"
+                  value="datos"
+                />
+                <label class="form-check-label" for="lib-tipo-datos"
+                  >Función / lógica de datos</label
+                >
+              </div>
+            </div>
+            <div class="mb-2" id="lib-tag-box">
+              <label class="form-label" for="lib-tag"
+                >Nombre de la etiqueta HTML</label
+              >
+              <input
+                class="form-control font-monospace"
+                id="lib-tag"
+                placeholder="input-numero"
+                autocomplete="off"
+              />
+              <div class="form-text">
+                Se usará como <code>&lt;input-numero&gt;</code> dentro de tus
+                apps.
+              </div>
+            </div>
+            <div class="mb-2 d-none" id="lib-funcion-box">
+              <label class="form-label" for="lib-funcion"
+                >Nombre de la función (opcional)</label
+              >
+              <input
+                class="form-control font-monospace"
+                id="lib-funcion"
+                placeholder="TasaCambio.obtener"
+                autocomplete="off"
+              />
+            </div>
+            <div class="mb-2">
+              <label class="form-label" for="lib-descripcion"
+                >Qué debe hacer y cómo se debe poder usar</label
+              >
+              <textarea
+                class="form-control"
+                id="lib-descripcion"
+                rows="3"
+                placeholder="Ej. Dada una fecha y un tipo (Oficial, Euro, libre), devuelve la tasa de cambio correspondiente."
+              ></textarea>
+            </div>
+            <div
+              class="invalid-feedback d-block"
+              id="lib-form-err"
+              style="display: none"
+            ></div>
+            <button class="btn btn-primary" id="btn-lib-generate" type="button">
+              <i class="bi bi-magic me-1"></i>Generar prompt
+            </button>
+
+            <div id="lib-prompt-box" class="mt-3 d-none">
+              <div
+                class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2"
+              >
+                <strong
+                  ><i class="bi bi-card-text me-1"></i>Prompt (llévalo a tu
+                  IA)</strong
+                >
+                <button
+                  class="btn btn-sm btn-outline-secondary"
+                  id="btn-lib-prompt-copy"
+                  type="button"
+                >
+                  <i class="bi bi-clipboard me-1"></i>Copiar
+                </button>
+              </div>
+              <textarea
+                class="form-control font-monospace small"
+                id="lib-prompt"
+                rows="10"
+                readonly
+                spellcheck="false"
+              ></textarea>
+            </div>
+
+            <hr class="my-3" />
+
+            <div class="mb-2">
+              <strong
+                ><i class="bi bi-box-arrow-in-down me-1"></i>Pega aquí el
+                código (lib.js) que te dio tu IA</strong
+              >
+            </div>
+            <textarea
+              class="form-control font-monospace small"
+              id="lib-code"
+              rows="8"
+              spellcheck="false"
+              placeholder="Pega aquí el código devuelto por tu IA…"
+            ></textarea>
+            <div class="d-flex gap-2 mt-2">
+              <button
+                class="btn btn-outline-primary"
+                id="btn-lib-read-code"
+                type="button"
+              >
+                <i class="bi bi-check2-circle me-1"></i>Leer y validar
+              </button>
+            </div>
+            <div id="lib-code-warn" class="alert alert-warning small mt-2 d-none">
+              <div class="fw-semibold mb-1">
+                <i class="bi bi-exclamation-triangle me-1"></i>Avisos
+              </div>
+              <ul class="mb-0 ps-3" id="lib-code-warn-list"></ul>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-success" id="btn-lib-publish" disabled>
+              <i class="bi bi-cloud-upload me-1"></i>Publicar librería
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Eliminar librería -->
+    <div class="modal fade" id="libDeleteModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-exclamation-octagon-fill me-2 text-danger"></i
+              >Eliminar librería
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-0">
+              Se eliminará <strong id="lib-del-name"></strong> y su código en
+              GitHub. Las apps que ya la estén usando dejarán de encontrarla.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-danger" id="btn-confirm-delete-lib">
+              <i class="bi bi-trash3 me-1"></i>Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="newRepoModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Nuevo repositorio de archivos</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label" for="nr-name"
+                >Nombre del repositorio</label
+              >
+              <input
+                class="form-control"
+                id="nr-name"
+                placeholder="mis-documentos"
+              />
+            </div>
+            <div class="form-label">Visibilidad</div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="nr-vis"
+                id="nr-private"
+                checked
+              />
+              <label class="form-check-label" for="nr-private"
+                ><i class="bi bi-lock-fill me-1"></i>Privado
+                <span class="text-muted small"
+                  >— solo tú puedes verlo</span
+                ></label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="nr-vis"
+                id="nr-public"
+              />
+              <label class="form-check-label" for="nr-public"
+                ><i class="bi bi-globe2 me-1"></i>Público
+                <span class="text-muted small"
+                  >— podrás compartir enlaces y códigos QR</span
+                ></label
+              >
+            </div>
+            <div
+              class="form-text ms-4"
+              id="nr-public-note"
+              style="display: none"
+            >
+              Se publicará automáticamente con GitHub Pages desde la rama
+              <code>main</code>.
+            </div>
+            <div class="alert alert-warning small mt-3 mb-0">
+              <i class="bi bi-exclamation-triangle me-1"></i>En un repositorio
+              público cualquier persona con el enlace puede ver sus documentos.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-success" id="btn-create-repo">
+              <i class="bi bi-plus-lg me-1"></i>Crear repositorio
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="tokenModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tk-title">Cambiar token de GitHub</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="small text-muted" id="tk-intro">
+              El nuevo token debe ser de la misma cuenta (<strong id="tk-user"
+                >—</strong
+              >). Se cifra con tu frase de encriptado antes de guardarse; nunca
+              se guarda en claro.
+            </p>
+            <div id="tk-token-group">
+              <label class="form-label" for="tk-new">Nuevo token</label>
+              <div class="input-group">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="tk-new"
+                  placeholder="ghp_..."
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  id="tk-toggle"
+                  title="Mostrar/ocultar"
+                >
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div class="form-text">
+                Clásico: permisos <code>repo</code> y <code>delete_repo</code>.
+                Fine-grained: Administration, Contents y Pages en modo lectura y
+                escritura.
+              </div>
+            </div>
+            <div class="mt-3">
+              <label class="form-label" for="tk-exp"
+                >Fecha de vencimiento del token</label
+              >
+              <input type="date" class="form-control" id="tk-exp" />
+              <div class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" id="tk-noexp" />
+                <label class="form-check-label" for="tk-noexp"
+                  >Mi token no vence</label
+                >
+              </div>
+              <div class="form-text">
+                Te avisaremos unos días antes de esa fecha.
+              </div>
+            </div>
+            <div
+              class="text-danger small mt-2"
+              id="err-token"
+              style="display: none"
+            ></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-success" id="btn-save-token">
+              <i class="bi bi-check-lg me-1"></i>Validar y guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="newFolderModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Nueva carpeta</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <label class="form-label" for="nf-name">Nombre de la carpeta</label>
+            <input class="form-control" id="nf-name" placeholder="facturas" />
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-success" id="btn-create-folder">
+              <i class="bi bi-folder-plus me-1"></i>Crear carpeta
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="uploadModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Subir documento</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label" for="up-repo">Repositorio</label>
+              <select class="form-select" id="up-repo"></select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="up-folder">Carpeta</label>
+              <select class="form-select" id="up-folder"></select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="up-file">Archivo</label>
+              <input class="form-control" type="file" id="up-file" />
+              <div class="form-text">Tamaño máximo: 25 MB.</div>
+            </div>
+            <div class="mb-1">
+              <label class="form-label" for="up-name"
+                >Nombre con el que se guardará</label
+              >
+              <input
+                class="form-control"
+                id="up-name"
+                placeholder="Se sugiere el nombre del archivo"
+              />
+              <div class="form-text">
+                Si no escribes la extensión, se conserva la del archivo.
+              </div>
+            </div>
+            <div class="mt-3 d-none" id="up-expire-box">
+              <label class="form-label" for="up-exp"
+                ><i class="bi bi-clock me-1"></i>Eliminar automáticamente</label
+              >
+              <select class="form-select" id="up-exp"></select>
+              <input
+                type="datetime-local"
+                class="form-control mt-2 d-none"
+                id="up-exp-dt"
+              />
+              <div class="form-text">
+                Solo en repositorios públicos. Se revisa cada ~15 minutos.
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-primary" id="btn-upload">
+              <i class="bi bi-cloud-arrow-up-fill me-1"></i>Subir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="viewerModal" tabindex="-1">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-break" id="viewer-title"></h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body" id="viewer-body"></div>
+          <div class="modal-footer">
+            <a class="btn btn-outline-primary d-none" id="viewer-download"
+              ><i class="bi bi-download me-1"></i>Descargar</a
+            >
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menú «⋮» de acciones del documento (se llena desde files.js) -->
+    <div
+      id="doc-menu"
+      class="doc-menu d-none"
+      role="menu"
+      aria-label="Acciones del documento"
+    ></div>
+
+    <div class="modal fade" id="copyModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-copy me-2"></i>Copiar documento
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-3">
+              Se copiará <strong class="text-break" id="cp-source"></strong
+              ><br /><span
+                class="small text-muted font-monospace"
+                id="cp-source-where"
+              ></span>
+            </p>
+            <div class="mb-3">
+              <label class="form-label" for="cp-repo"
+                >Repositorio destino</label
+              >
+              <select class="form-select" id="cp-repo"></select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="cp-folder">Carpeta destino</label>
+              <select class="form-select" id="cp-folder"></select>
+            </div>
+            <div class="mb-1">
+              <label class="form-label" for="cp-name">Nombre de la copia</label>
+              <input class="form-control" id="cp-name" />
+            </div>
+            <div
+              class="alert alert-info small mt-2 mb-0 d-none"
+              id="cp-msg"
+            ></div>
+            <div
+              class="alert alert-warning small mt-3 mb-0 d-none"
+              id="cp-public-note"
+            >
+              <i class="bi bi-exclamation-triangle me-1"></i>El destino es un
+              repositorio <strong>público</strong>: cualquier persona con el
+              enlace podrá ver la copia.
+            </div>
+            <div class="mt-3 d-none" id="cp-expire-box">
+              <label class="form-label" for="cp-exp"
+                ><i class="bi bi-clock me-1"></i>Eliminar la copia
+                automáticamente</label
+              >
+              <select class="form-select" id="cp-exp"></select>
+              <input
+                type="datetime-local"
+                class="form-control mt-2 d-none"
+                id="cp-exp-dt"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-primary" id="btn-confirm-copy">
+              <i class="bi bi-copy me-1"></i>Copiar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="expireModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-clock me-2"></i>Eliminación automática
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-1">
+              <strong class="text-break" id="ex-name"></strong>
+            </p>
+            <p class="small text-muted" id="ex-current"></p>
+            <label class="form-label" for="ex-exp"
+              >Eliminar este documento</label
+            >
+            <select class="form-select" id="ex-exp"></select>
+            <input
+              type="datetime-local"
+              class="form-control mt-2 d-none"
+              id="ex-exp-dt"
+            />
+            <div class="form-text">
+              Una tarea programada de GitHub, dentro de este repositorio, lo
+              borra al vencer (se revisa cada ~15 minutos, puede tardar unos
+              minutos más). Se elimina de la rama <code>main</code> y del sitio;
+              las versiones anteriores siguen en el historial de git.
+            </div>
+            <div class="text-danger small mt-2 d-none" id="ex-err"></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-primary" id="btn-save-expire">
+              <i class="bi bi-check-lg me-1"></i>Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="shareModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-qr-code me-2"></i>Compartir
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body text-center">
+            <p class="fw-medium text-break mb-3" id="share-title"></p>
+            <div
+              id="share-mode"
+              class="btn-group btn-group-sm mb-3 d-none"
+              role="group"
+            >
+              <button
+                type="button"
+                class="btn btn-outline-primary active"
+                id="share-mode-raw"
+              >
+                Enlace directo
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                id="share-mode-pages"
+              >
+                Sitio web (Pages)
+              </button>
+            </div>
+            <div id="share-qr" class="mb-3"></div>
+            <div class="input-group">
+              <input
+                class="form-control font-monospace small"
+                id="share-link"
+                readonly
+              />
+              <button
+                class="btn btn-outline-primary"
+                type="button"
+                id="btn-copy-link"
+              >
+                <i class="bi bi-clipboard me-1"></i>Copiar
+              </button>
+            </div>
+            <div class="form-text text-start" id="share-note">
+              El enlace abre el documento directamente. Solo funciona mientras
+              el repositorio sea público.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-primary" id="btn-download-qr">
+              <i class="bi bi-qr-code me-1"></i>Descargar QR
+            </button>
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="appShareModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-share me-2"></i>Compartir
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body text-center">
+            <p class="fw-medium text-break mb-1" id="app-share-title"></p>
+            <div class="form-text text-start mb-3" id="app-share-expires"></div>
+            <div id="app-share-qr" class="mb-3"></div>
+            <div class="input-group">
+              <input
+                class="form-control font-monospace small"
+                id="app-share-link"
+                readonly
+              />
+              <button
+                class="btn btn-outline-primary"
+                type="button"
+                id="btn-copy-app-share-link"
+              >
+                <i class="bi bi-clipboard me-1"></i>Copiar
+              </button>
+            </div>
+            <div class="form-text text-start mt-2">
+              Cualquiera con este enlace puede ver el contenido, sin
+              necesidad de cuenta. Trátalo como una contraseña: no lo
+              publiques en un lugar abierto.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-trash3 me-2 text-danger"></i>Eliminar documento
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-1">¿Seguro que quieres eliminar este documento?</p>
+            <p class="fw-medium text-break mb-1" id="del-name"></p>
+            <p class="small text-muted mb-3">
+              Ubicación: <span class="font-monospace" id="del-where"></span>
+            </p>
+            <div
+              class="alert alert-warning small mb-0 d-none"
+              id="del-public-note"
+            >
+              <i class="bi bi-exclamation-triangle me-1"></i>El repositorio es
+              público: el enlace compartido dejará de funcionar, pero GitHub
+              conserva el contenido en el historial de commits.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-danger" id="btn-confirm-delete">
+              <i class="bi bi-trash3 me-1"></i>Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="deleteFolderModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-folder-x me-2 text-danger"></i>Eliminar carpeta
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-1">
+              ¿Seguro que quieres eliminar esta carpeta y todo lo que contiene?
+            </p>
+            <p class="fw-medium text-break mb-1" id="dfold-name"></p>
+            <p class="small text-muted mb-3">
+              Se eliminarán <strong id="dfold-count">0</strong> documento(s) del
+              repositorio <span class="font-monospace" id="dfold-repo"></span>.
+            </p>
+            <div
+              class="alert alert-warning small mb-0 d-none"
+              id="dfold-public-note"
+            >
+              <i class="bi bi-exclamation-triangle me-1"></i>El repositorio es
+              público: los enlaces compartidos de esos documentos dejarán de
+              funcionar, pero GitHub conserva el contenido en el historial de
+              commits.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-danger" id="btn-confirm-delete-folder">
+              <i class="bi bi-trash3 me-1"></i>Eliminar carpeta
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="deleteRepoModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-exclamation-octagon-fill me-2 text-danger"></i
+              >Eliminar repositorio
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-danger small">
+              <strong>Esta acción es irreversible.</strong> Se borrará de GitHub
+              el repositorio
+              <span class="font-monospace" id="drepo-full"></span> con todos sus
+              documentos, carpetas e historial. Los enlaces y códigos QR
+              compartidos dejarán de funcionar.
+            </div>
+            <label class="form-label" for="drepo-confirm"
+              >Para confirmar, escribe el nombre del repositorio:
+              <strong class="font-monospace" id="drepo-name"></strong
+            ></label>
+            <input
+              class="form-control"
+              id="drepo-confirm"
+              autocomplete="off"
+              spellcheck="false"
+            />
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button
+              class="btn btn-danger"
+              id="btn-confirm-delete-repo"
+              disabled
+            >
+              <i class="bi bi-trash3 me-1"></i>Eliminar repositorio
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="fbSecureModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-shield-lock-fill me-2"></i>Proteger tu Firebase
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body"><div id="fbs-modal-body"></div></div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="retireModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-exclamation-octagon-fill me-2 text-danger"></i
+              >Retirarme de SecureDoc
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-danger small mb-3">
+              <strong>Esta acción es irreversible.</strong> Se eliminará la
+              cuenta <span class="font-monospace" id="rt-email"></span> y todo
+              lo que SecureDoc guarda de ti en la plataforma: tu acceso (correo
+              y contraseña), tu token de GitHub y la configuración de tu
+              Firebase (guardados cifrados), tu perfil y el registro de tus
+              repositorios, proyectos y aplicaciones (<span
+                id="rt-counts"
+              ></span
+              >). Si olvidas tu frase de encriptado, no hay forma de recuperar
+              nada de esto. Después podrás
+              <strong>registrarte de nuevo</strong>, incluso con el mismo
+              correo.
+            </div>
+            <div
+              class="alert alert-warning small mb-3 d-none"
+              id="rt-forgot-note"
+            >
+              <strong
+                >Sin tu frase no se puede descifrar tu token de GitHub</strong
+              >, así que SecureDoc no puede borrar nada en GitHub por ti
+              (tampoco el repositorio de perfil
+              <span class="font-monospace">securedoc</span>). Tus repositorios
+              seguirán en tu GitHub, pero el registro que SecureDoc llevaba de
+              ellos se pierde: al registrarte de nuevo tendrás que crear
+              repositorios nuevos desde la app, o borrar los anteriores a mano
+              en GitHub. Si al registrarte de nuevo usas la misma cuenta de
+              GitHub, el repositorio
+              <span class="font-monospace">securedoc</span> existente se
+              reutiliza para tu perfil.
+            </div>
+            <div class="alert alert-secondary small mb-3">
+              <strong>Lo que NO se borra:</strong> tus repositorios en GitHub
+              (archivos, proyectos de Desarrollo, aplicaciones publicadas) y los
+              datos de tu propio Firebase siguen siendo tuyos y quedan como
+              están. Los enlaces y códigos QR ya compartidos seguirán
+              funcionando.
+            </div>
+            <div class="form-check mb-3 d-none" id="rt-profile-wrap">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="rt-profile-repo"
+              />
+              <label class="form-check-label small" for="rt-profile-repo">
+                También eliminar de GitHub mi repositorio de perfil
+                <span class="font-monospace">securedoc</span>
+                (requiere que tu token tenga permiso para borrar repositorios;
+                si no, tendrás que borrarlo a mano).
+              </label>
+            </div>
+            <label class="form-label small" for="rt-password"
+              >Tu contraseña de acceso</label
+            >
+            <input
+              type="password"
+              class="form-control mb-3"
+              id="rt-password"
+              autocomplete="current-password"
+            />
+            <label class="form-label small" for="rt-confirm"
+              >Para confirmar, escribe tu correo:
+              <strong class="font-monospace" id="rt-email2"></strong
+            ></label>
+            <input
+              class="form-control mb-3"
+              id="rt-confirm"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="rt-ack" />
+              <label class="form-check-label small" for="rt-ack"
+                >Entiendo que mi cuenta se eliminará de forma definitiva.</label
+              >
+            </div>
+            <div
+              class="text-danger small mt-2"
+              id="err-retire"
+              style="display: none"
+            ></div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-danger" id="btn-confirm-retire" disabled>
+              <i class="bi bi-person-x me-1"></i>Eliminar mi cuenta
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="appRunModal" tabindex="-1">
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-window-stack me-2"></i
+              ><span id="app-run-title">App</span>
+            </h5>
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-sm ms-auto me-2"
+              id="btn-share-app"
+              title="Compartir el contenido que la app está mostrando ahora, por un enlace cifrado"
+            >
+              <i class="bi bi-share me-1"></i>Compartir
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-sm me-2"
+              id="btn-print-app"
+              title="Imprimir el contenido que la app está mostrando ahora"
+            >
+              <i class="bi bi-printer me-1"></i>Imprimir
+            </button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-0 d-flex flex-column">
+            <!-- Transparencia de red (no bloqueo): a dónde puede "llamar" esta
+                 app importada. Se llena por JS (análisis estático al abrir +
+                 lo observado en vivo mientras se usa); tú decides si confías. -->
+            <div
+              id="app-run-netwarn"
+              class="alert alert-warning small mb-0 rounded-0 border-start-0 border-end-0 d-none"
+              style="max-height: 30vh; overflow-y: auto"
+              role="alert"
+            ></div>
+            <iframe
+              id="app-run-frame"
+              title="Aplicación"
+              class="w-100 border-0 flex-grow-1"
+              sandbox="allow-scripts"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Importar app del catálogo (copia/snapshot); pegar HTML queda como respaldo -->
+    <div class="modal fade" id="importAppModal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-box-arrow-in-down me-2"></i>Importar una app
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="small text-muted">
+              Revisa el código de la app antes de guardarla. Se guardará una
+              <strong>copia congelada</strong> en tu consola y sus datos se
+              guardarán en <strong>tu</strong> base de datos. No podrás
+              modificar su código: solo usarla.
+            </p>
+            <div class="mb-3">
+              <label class="form-label" for="imp-name"
+                >Nombre para mostrar <span class="text-muted">(opcional)</span></label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="imp-name"
+                placeholder="Se deduce del contenido si lo dejas vacío"
+                maxlength="60"
+                autocomplete="off"
+              />
+            </div>
+            <div class="mb-2">
+              <a
+                class="small"
+                data-bs-toggle="collapse"
+                href="#imp-html-collapse"
+                role="button"
+                aria-expanded="false"
+                aria-controls="imp-html-collapse"
+                >Pegar el HTML manualmente</a
+              >
+            </div>
+            <div class="collapse mb-3" id="imp-html-collapse">
+              <label class="form-label" for="imp-html">HTML de la app</label>
+              <textarea
+                class="form-control font-monospace"
+                id="imp-html"
+                rows="6"
+                spellcheck="false"
+                placeholder="Pega aquí el código HTML completo de la app"
+              ></textarea>
+            </div>
+            <div id="imp-err" class="alert alert-danger d-none py-2 small"></div>
+            <div
+              id="imp-warn"
+              class="alert alert-warning d-none py-2 small"
+            ></div>
+            <div id="imp-preview-box" class="d-none">
+              <div class="small text-muted mb-1">
+                <i class="bi bi-play-circle me-1"></i>Prueba (datos de prueba
+                desechables; no afecta a tus datos reales):
+              </div>
+              <iframe
+                id="imp-preview"
+                title="Prueba de la app importada"
+                class="w-100 border rounded"
+                style="height: 320px"
+                sandbox="allow-scripts"
+              ></iframe>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-outline-primary" id="btn-imp-review">
+              <i class="bi bi-search me-1"></i>Traer y revisar
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-imp-confirm" disabled>
+              <i class="bi bi-box-arrow-in-down me-1"></i>Importar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="catalogModal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-shop-window me-2"></i>Catálogo de apps
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="small text-muted">
+              Apps publicadas por otros usuarios de SecureDoc. Al importar una
+              se guarda una <strong>copia</strong> en tu consola y sus datos
+              se guardan en <strong>tu</strong> base de datos. No podrás
+              modificar su código: solo usarla.
+              <strong>Aviso:</strong> SecureDoc no revisa el contenido de las
+              apps publicadas por otros usuarios; impórtalas bajo tu propio
+              criterio.
+            </p>
+            <input
+              type="search"
+              class="form-control form-control-sm mb-3"
+              id="cat-search"
+              placeholder="Buscar por nombre, descripción o autor..."
+              autocomplete="off"
+            />
+            <div id="cat-loading" class="text-center text-muted py-4 d-none">
+              <div
+                class="spinner-border spinner-border-sm me-2"
+                role="status"
+              ></div>
+              Cargando catálogo...
+            </div>
+            <div id="cat-list" class="row g-3"></div>
+            <div id="cat-empty" class="text-center text-muted py-4 d-none">
+              <i class="bi bi-inbox display-6"></i>
+              <p class="mb-0">Todavía no hay apps publicadas en el catálogo.</p>
+            </div>
+            <div id="cat-noresults" class="text-center text-muted py-4 d-none">
+              No hay resultados para tu búsqueda.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="catalogAliasModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-person-badge me-2"></i>Alias público para el
+              catálogo
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="small text-muted">
+              Este nombre se mostrará como autor de tus apps en el catálogo
+              público. <strong>Nunca se muestra tu correo real.</strong>
+              Puedes cambiarlo cuando quieras.
+            </p>
+            <label class="form-label" for="cat-alias-input">Alias</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cat-alias-input"
+              maxlength="30"
+              autocomplete="off"
+              placeholder="Ej: constructor_taller"
+            />
+            <div id="cat-alias-err" class="text-danger small mt-2 d-none"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="btn-cat-alias-save">
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="catalogConfirmModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cat-confirm-title">Confirmar</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p id="cat-confirm-message" class="mb-0"></p>
+            <div id="cat-confirm-desc-wrap" class="mt-3 d-none">
+              <label for="cat-confirm-desc" class="form-label small mb-1"
+                >Descripción breve (se muestra en el catálogo)</label
+              >
+              <textarea
+                id="cat-confirm-desc"
+                class="form-control"
+                rows="2"
+                maxlength="200"
+              ></textarea>
+            </div>
+            <div
+              id="cat-confirm-warnings"
+              class="alert alert-warning small mt-3 d-none"
+            ></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary" id="cat-confirm-btn">
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="importDataModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-upload me-2"></i>Importar datos —
+              <span id="imd-app-name"></span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-danger small">
+              <i class="bi bi-exclamation-octagon-fill me-1"></i>
+              <strong>Esto reemplaza TODOS los datos actuales de esta app</strong>
+              por los del archivo que elijas. No se puede deshacer.
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="imd-file"
+                >Archivo JSON exportado (con "Exportar datos")</label
+              >
+              <input
+                type="file"
+                class="form-control"
+                id="imd-file"
+                accept="application/json,.json"
+              />
+            </div>
+            <div id="imd-err" class="alert alert-danger d-none py-2 small"></div>
+            <div id="imd-summary" class="d-none"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="btn-imd-confirm"
+              disabled
+            >
+              <i class="bi bi-upload me-1"></i>Reemplazar datos
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="app-toast" class="toast" role="alert">
+        <div class="toast-header">
+          <i class="me-2 bi" id="toast-icon"></i
+          ><strong class="me-auto" id="toast-title">Aviso</strong>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+        <div class="toast-body" id="toast-body"></div>
+      </div>
+    </div>
+
+    <div id="loading-overlay" class="d-none">
+      <div class="spinner-content">
+        <div class="spinner-border text-light" role="status"></div>
+        <p class="mt-3 text-light" id="loading-text">Procesando...</p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="js/crypto.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/firebase-app.js"></script>
+    <script src="js/github.js"></script>
+    <script src="js/user-firebase.js"></script>
+    <script src="js/qr.js"></script>
+    <script src="js/files.js"></script>
+    <script src="js/manual.js"></script>
+    <script src="js/sealedbox.js"></script>
+    <script src="js/prompt-engine.js"></script>
+    <script src="js/libs.js"></script>
+    <script src="js/connections.js"></script>
+    <script data-sd="min" src="js/app-runner.js"></script>
+    <script src="js/connections-ui.js"></script>
+    <script src="js/services-ui.js"></script>
+    <script src="js/dev.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
