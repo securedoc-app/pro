@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo se ejecuta una aplicación — SecureDoc</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#1f2937;--muted:#6b7280;--brand:#4f46e5;--brand2:#0ea5e9;--ok:#059669;--warn:#d97706;--line:#e5e7eb}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+header.top{background:linear-gradient(135deg,#0ea5e9,#4f46e5);color:#fff;padding:2.2rem 1.2rem}
+.wrap{max-width:960px;margin:0 auto;padding:0 1.1rem}
+header.top h1{margin:.2rem 0;font-size:1.8rem}
+header.top p{margin:0;opacity:.93}
+.badge-top{display:inline-block;background:rgba(255,255,255,.2);padding:.2rem .7rem;border-radius:999px;font-size:.8rem;margin-bottom:.5rem}
+main{padding:1.4rem 0 3rem}
+h2{margin-top:2.2rem;font-size:1.35rem;border-bottom:2px solid var(--line);padding-bottom:.35rem}
+h3{font-size:1.08rem;margin-top:1.4rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.3rem;margin:1rem 0;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+ol.steps li{position:relative;padding:.6rem 0 .6rem 2.8rem;border-bottom:1px dashed var(--line)}
+ol.steps li:last-child{border-bottom:0}
+ol.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:.55rem;width:1.9rem;height:1.9rem;background:var(--brand2);color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem}
+.note,.tip,.warn{border-radius:10px;padding:.8rem 1rem;margin:1rem 0;font-size:.96rem}
+.note{background:#eef2ff;border-left:4px solid var(--brand)}
+.tip{background:#ecfdf5;border-left:4px solid var(--ok)}
+.warn{background:#fffbeb;border-left:4px solid var(--warn)}
+code{background:#eef2ff;padding:.08rem .35rem;border-radius:5px;font-size:.9em}
+details.deep{background:#0f172a;color:#e2e8f0;border-radius:10px;margin:1rem 0;overflow:hidden}
+details.deep>summary{cursor:pointer;padding:.8rem 1rem;background:#1e293b;font-weight:600;list-style:none}
+details.deep>summary::before{content:"\25B8  Profundidad técnica — ";color:#38bdf8;font-weight:700}
+details.deep[open]>summary::before{content:"\25BE  Profundidad técnica — ";color:#38bdf8}
+details.deep .inner{padding:.5rem 1.1rem 1rem}
+details.deep code{background:#334155;color:#e2e8f0}
+.diagram{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1rem;margin:1.2rem 0;overflow-x:auto;text-align:center}
+.legend{display:flex;gap:1.1rem;flex-wrap:wrap;font-size:.84rem;color:var(--muted);justify-content:center;margin-top:.6rem}
+.legend span{display:inline-flex;align-items:center;gap:.4rem}
+.dot{width:.85rem;height:.85rem;border-radius:3px;display:inline-block}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
+th{background:#f1f5f9}
+.toc{font-size:.95rem;columns:2;column-gap:2rem}
+.toc a{color:var(--brand);text-decoration:none;display:block;padding:.15rem 0}
+.toc a:hover{text-decoration:underline}
+footer{color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 1rem}
+@media(max-width:640px){.toc{columns:1}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<span class="badge-top">Manual de usuario · Sección Aplicaciones</span>
+<h1>Cómo se ejecuta tu aplicación</h1>
+<p>Qué pasa “por dentro” cuando abres una de tus apps: dónde corre, cómo lee y guarda datos, y por qué es seguro.</p>
+</div></header>
+<main class="wrap">
+<div class="card toc">
+<a href="#idea">1. La idea en una frase</a>
+<a href="#donde">2. ¿Dónde corre la app?</a>
+<a href="#flujo">3. Diagrama: consola ↔ app ↔ Firebase</a>
+<a href="#paso">4. El viaje de un dato, paso a paso</a>
+<a href="#api">5. Lo que la app puede pedir</a>
+<a href="#serv">6. Servicios externos y enlaces</a>
+<a href="#limites">7. Límites y protecciones</a>
+<a href="#imprimir">8. Imprimir</a>
+</div>
+<h2 id="idea">1. La idea en una frase</h2>
+<div class="card">
+<p>Tus apps <strong>no son sitios web independientes</strong>. Son archivos <code>index.html</code> que corren <strong>dentro</strong> de SecureDoc, en una habitación cerrada con llave. La app no habla con tu base de datos directamente: le pide todo a SecureDoc, que actúa de <strong>portero y mensajero</strong>.</p>
+</div>
+<div class="note">Ventaja clave: la app <strong>nunca</strong> ve tu configuración de Firebase, tus tokens ni tu frase. Aunque el código lo haya escrito una IA, no puede filtrar tus secretos.</div>
+
+<h2 id="donde">2. ¿Dónde corre la app?</h2>
+<div class="card">
+<p>La app se abre en un <strong>marco aislado</strong> (un <code>iframe</code> en modo “sandbox”). Imagina una caja de cristal: puedes ver y usar la app, pero ella no puede salir de la caja ni meter la mano en la consola.</p>
+<ul>
+<li>Puede <strong>mostrar</strong> su interfaz y <strong>ejecutar</strong> su propio código.</li>
+<li><strong>No</strong> puede leer las cookies, los secretos ni los datos ya descifrados de la consola.</li>
+<li><strong>No</strong> puede tocar tus otras apps.</li>
+<li>Para cualquier dato, <strong>envía un mensaje</strong> a la consola y espera la respuesta.</li>
+</ul>
+</div>
+<details class="deep"><summary>qué es un “origen opaco”</summary><div class="inner">
+<p>El marco se crea con <code>sandbox="allow-scripts allow-forms allow-modals"</code>, <strong>sin</strong> <code>allow-same-origin</code>. Eso le da a la app un <strong>origen opaco</strong>: para el navegador, la app es “de ninguna parte”, así que no comparte almacén, cookies ni permisos con la consola. Como el origen es opaco, los mensajes no se validan por su dirección (<code>e.origin</code>) sino por <strong>quién los envió</strong> (<code>e.source</code>): la consola solo acepta mensajes del marco concreto, y el marco solo acepta mensajes de su consola madre.</p>
+</div></details>
+<h2 id="flujo">3. Diagrama: consola ↔ app ↔ Firebase</h2>
+<p>Las tres piezas y cómo se comunican. La app (izquierda) solo habla con la consola; la consola (centro) es la única que habla con tu Firebase (derecha).</p>
+<div class="diagram">
+<svg viewBox="0 0 920 430" width="900" role="img" aria-label="Diagrama de flujo: la app en un marco aislado pide datos por mensajes a la consola; la consola, con la sesion del dueno, consulta el Firebase del usuario y devuelve el resultado" font-family="system-ui,sans-serif">
+<defs>
+<marker id="a1" markerWidth="11" markerHeight="11" refX="8" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#0ea5e9"/></marker>
+<marker id="a2" markerWidth="11" markerHeight="11" refX="8" refY="3.2" orient="auto"><path d="M0,0 L8,3.2 L0,6.4 Z" fill="#059669"/></marker>
+</defs>
+<!-- columnas -->
+<rect x="20" y="20" width="250" height="390" rx="14" fill="#f0f9ff" stroke="#0ea5e9" stroke-dasharray="6 4"/>
+<rect x="335" y="20" width="250" height="390" rx="14" fill="#eef2ff" stroke="#4f46e5"/>
+<rect x="650" y="20" width="250" height="390" rx="14" fill="#f0fdf4" stroke="#059669"/>
+<text x="145" y="46" text-anchor="middle" font-weight="700" fill="#0369a1">TU APP</text>
+<text x="145" y="64" text-anchor="middle" font-size="11" fill="#0284c7">marco aislado (caja de cristal)</text>
+<text x="460" y="46" text-anchor="middle" font-weight="700" fill="#3730a3">SECUREDOC (consola)</text>
+<text x="460" y="64" text-anchor="middle" font-size="11" fill="#4338ca">portero + mensajero</text>
+<text x="775" y="46" text-anchor="middle" font-weight="700" fill="#047857">TU FIREBASE</text>
+<text x="775" y="64" text-anchor="middle" font-size="11" fill="#059669">tu base de datos</text>
+<!-- paso 1 -->
+<rect x="35" y="92" width="220" height="46" rx="8" fill="#fff" stroke="#bae6fd"/>
+<text x="145" y="112" text-anchor="middle" font-size="12" fill="#0c4a6e">SecureDoc.data.add({…})</text>
+<text x="145" y="128" text-anchor="middle" font-size="11" fill="#64748b">“guarda este registro”</text>
+<line x1="255" y1="115" x2="333" y2="115" stroke="#0ea5e9" stroke-width="2" marker-end="url(#a1)"/>
+<text x="294" y="107" text-anchor="middle" font-size="10" fill="#0ea5e9">mensaje</text>
+<!-- paso 2 revisa -->
+<rect x="350" y="150" width="220" height="70" rx="8" fill="#fff" stroke="#c7d2fe"/>
+<text x="460" y="172" text-anchor="middle" font-size="12" font-weight="600" fill="#3730a3">Revisa y protege</text>
+<text x="460" y="190" text-anchor="middle" font-size="11" fill="#475569">límites, tamaño, campos “_”,</text>
+<text x="460" y="205" text-anchor="middle" font-size="11" fill="#475569">ritmo de peticiones</text>
+<!-- paso 3 consulta -->
+<line x1="585" y1="185" x2="648" y2="185" stroke="#059669" stroke-width="2" marker-end="url(#a2)"/>
+<text x="616" y="177" text-anchor="middle" font-size="10" fill="#059669">sesión del dueño</text>
+<rect x="665" y="150" width="220" height="70" rx="8" fill="#fff" stroke="#bbf7d0"/>
+<text x="775" y="180" text-anchor="middle" font-size="12" fill="#065f46">Escribe en la colección</text>
+<text x="775" y="198" text-anchor="middle" font-size="11" fill="#059669">app-&lt;tu-app&gt;</text>
+<!-- regreso -->
+<line x1="648" y1="250" x2="587" y2="250" stroke="#94a3b8" stroke-width="2" marker-end="url(#a1)"/>
+<text x="616" y="242" text-anchor="middle" font-size="10" fill="#64748b">resultado</text>
+<line x1="333" y1="285" x2="257" y2="285" stroke="#94a3b8" stroke-width="2" marker-end="url(#a1)"/>
+<text x="294" y="277" text-anchor="middle" font-size="10" fill="#64748b">respuesta</text>
+<rect x="35" y="300" width="220" height="46" rx="8" fill="#fff" stroke="#bae6fd"/>
+<text x="145" y="321" text-anchor="middle" font-size="12" fill="#0c4a6e">La promesa se resuelve</text>
+<text x="145" y="337" text-anchor="middle" font-size="11" fill="#64748b">“listo, id creado”</text>
+<!-- secretos -->
+<rect x="350" y="300" width="220" height="60" rx="8" fill="#fef2f2" stroke="#fecaca"/>
+<text x="460" y="324" text-anchor="middle" font-size="11" fill="#b91c1c">🔒 Tus secretos (frase,</text>
+<text x="460" y="340" text-anchor="middle" font-size="11" fill="#b91c1c">tokens, config) se quedan</text>
+<text x="460" y="354" text-anchor="middle" font-size="11" fill="#b91c1c">aquí, nunca cruzan a la app</text>
+<text x="460" y="392" text-anchor="middle" font-size="11" fill="#94a3b8">La app solo conoce nombres lógicos y resultados, jamás URLs ni claves.</text>
+</svg>
+<div class="legend"><span><i class="dot" style="background:#0ea5e9"></i>App pide por mensaje</span><span><i class="dot" style="background:#4f46e5"></i>Consola revisa</span><span><i class="dot" style="background:#059669"></i>Consola consulta Firebase</span></div>
+</div>
+<h2 id="paso">4. El viaje de un dato, paso a paso</h2>
+<div class="card">
+<ol class="steps">
+<li>Abres la app desde <strong>Aplicaciones</strong>. SecureDoc la carga en el marco aislado y le envía un “hola” con el contexto (nombre de la app, si es de solo lectura, qué puede pedir).</li>
+<li>La app hace algo, por ejemplo <code>SecureDoc.data.list()</code> para traer registros. Eso <strong>no</strong> consulta Firebase: envía un <strong>mensaje</strong> a la consola.</li>
+<li>La consola <strong>revisa</strong> la petición (que sea válida, dentro de los límites) y, con la <strong>sesión del dueño</strong>, consulta <strong>tu</strong> Firebase.</li>
+<li>La consola devuelve el resultado por el mismo canal. La promesa en la app se resuelve y la pantalla se actualiza.</li>
+<li>Con <code>watch()</code>, la app se “suscribe”: cuando los datos cambian, la consola le avisa en <strong>tiempo real</strong>.</li>
+</ol>
+</div>
+<details class="deep"><summary>el canal de mensajes y por qué el tiempo real no se cae</summary><div class="inner">
+<p>La app y la consola se hablan con <code>postMessage</code> y un “sobre” con contrato fijo: <code>hello</code> (consola→app), <code>ready</code> (app→consola), <code>req</code>/<code>res</code> (petición y respuesta) y <code>event</code> (avisos de <code>watch</code>). La sesión hacia tu Firebase se abre <strong>una sola vez por app y se reutiliza</strong>: si se reabriera en cada operación, un guardado destruiría las suscripciones de tiempo real y la app dejaría de refrescarse. Por eso se cachea.</p>
+</div></details>
+
+<h2 id="api">5. Lo que la app puede pedir</h2>
+<table>
+<tr><th>Acción</th><th>Para qué sirve</th></tr>
+<tr><td><code>list</code> / <code>get</code></td><td>Leer varios registros o uno por su identificador.</td></tr>
+<tr><td><code>add</code></td><td>Crear un registro nuevo.</td></tr>
+<tr><td><code>update</code></td><td>Modificar un registro existente.</td></tr>
+<tr><td><code>remove</code></td><td>Eliminar un registro.</td></tr>
+<tr><td><code>watch</code></td><td>Recibir avisos en tiempo real cuando algo cambia.</td></tr>
+<tr><td><code>api.call</code> / <code>openLink</code></td><td>Consultar un servicio externo o abrir un enlace (ver sección 6).</td></tr>
+</table>
+<div class="note">Si una app es de <strong>solo lectura</strong>, las acciones de escritura (<code>add</code>, <code>update</code>, <code>remove</code>) se rechazan con un mensaje claro.</div>
+<h2 id="serv">6. Servicios externos (sin filtrar tu token)</h2>
+<div class="card">
+<p>A veces una app necesita datos de fuera (por ejemplo una tasa de cambio o una API con clave). La app <strong>no</strong> guarda la clave: le pide a la consola <em>“llama al servicio X con mis credenciales”</em>, y la consola añade el token y hace la llamada por ella.</p>
+</div>
+<div class="tip">Así, aunque el código de la app sea público o lo haya escrito una IA, tu token <strong>nunca</strong> aparece dentro del marco.</div>
+<details class="deep"><summary>cómo se guarda el token y por qué falla a veces por CORS</summary><div class="inner">
+<p>Los tokens se guardan <strong>cifrados</strong> (AES-256-GCM) en un documento de configuración, nunca en claro, y la consola los envía en la cabecera <code>Authorization: Bearer &lt;token&gt;</code>. Como el marco tiene origen opaco (“null”), si una API externa no habilita CORS la llamada se bloquea: la solución es del <strong>lado del servidor</strong> (cabeceras <code>Access-Control-Allow-*</code> y responder a <code>OPTIONS</code>), no desde la app. La reproducción de audio con <code>&lt;audio&gt;</code> no sufre esta restricción.</p>
+</div></details>
+
+<h2 id="limites">7. Reglas de convivencia (límites)</h2>
+<p>Para que todas las apps convivan sin dañar tus datos, la consola impone límites. Normalmente ni los notarás:</p>
+<table>
+<tr><th>Límite</th><th>Valor</th><th>Por qué</th></tr>
+<tr><td>Registros por consulta</td><td>500</td><td>Evita traer una colección enorme de golpe.</td></tr>
+<tr><td>Tamaño de un registro</td><td>64 KB</td><td>Mantiene los documentos ligeros y rápidos.</td></tr>
+<tr><td>Suscripciones en vivo</td><td>5</td><td>Limita cuántas cosas se vigilan a la vez.</td></tr>
+<tr><td>Operaciones en paralelo</td><td>8</td><td>Evita saturar la base de datos.</td></tr>
+<tr><td>Tiempo máximo por operación</td><td>20 s</td><td>Si algo se cuelga, se corta con un error claro.</td></tr>
+</table>
+<div class="warn">Si combinas un filtro (<code>where</code>) y un orden (<code>orderBy</code>) sobre <strong>campos distintos</strong>, Firestore pide un índice que no existe. Solución sencilla: filtra u ordena por un solo campo y ordena el resto en la propia app.</div>
+
+<h2 id="imprimir">8. Imprimir desde una app</h2>
+<div class="card">
+<p>Si imprimes (por ejemplo un reporte) y sale <strong>sin colores</strong>, activa <strong>“Gráficos de fondo”</strong> en el diálogo de impresión del navegador. La app bien hecha ya pide al navegador respetar los colores y espera a que carguen los estilos antes de imprimir.</p>
+</div>
+
+</main>
+<footer>SecureDoc — Manual de usuario. Documento de apoyo de la sección <strong>Aplicaciones</strong>.</footer>
+</body>
+</html>
