@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo desarrollar una app con ayuda de la IA — SecureDoc</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#1f2937;--muted:#6b7280;--brand:#4f46e5;--brand2:#0ea5e9;--ok:#059669;--warn:#d97706;--line:#e5e7eb}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+header.top{background:linear-gradient(135deg,#4f46e5,#0ea5e9);color:#fff;padding:2.2rem 1.2rem}
+.wrap{max-width:960px;margin:0 auto;padding:0 1.1rem}
+header.top h1{margin:.2rem 0;font-size:1.8rem}
+header.top p{margin:0;opacity:.93}
+.badge-top{display:inline-block;background:rgba(255,255,255,.2);padding:.2rem .7rem;border-radius:999px;font-size:.8rem;margin-bottom:.5rem}
+main{padding:1.4rem 0 3rem}
+h2{margin-top:2.2rem;font-size:1.35rem;border-bottom:2px solid var(--line);padding-bottom:.35rem}
+h3{font-size:1.08rem;margin-top:1.4rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.3rem;margin:1rem 0;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+ol.steps li{position:relative;padding:.6rem 0 .6rem 2.8rem;border-bottom:1px dashed var(--line)}
+ol.steps li:last-child{border-bottom:0}
+ol.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:.55rem;width:1.9rem;height:1.9rem;background:var(--brand);color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem}
+.note,.tip,.warn{border-radius:10px;padding:.8rem 1rem;margin:1rem 0;font-size:.96rem}
+.note{background:#eef2ff;border-left:4px solid var(--brand)}
+.tip{background:#ecfdf5;border-left:4px solid var(--ok)}
+.warn{background:#fffbeb;border-left:4px solid var(--warn)}
+code{background:#eef2ff;padding:.08rem .35rem;border-radius:5px;font-size:.9em}
+details.deep{background:#0f172a;color:#e2e8f0;border-radius:10px;margin:1rem 0;overflow:hidden}
+details.deep>summary{cursor:pointer;padding:.8rem 1rem;background:#1e293b;font-weight:600;list-style:none}
+details.deep>summary::before{content:"\25B8  Profundidad técnica — ";color:#38bdf8;font-weight:700}
+details.deep[open]>summary::before{content:"\25BE  Profundidad técnica — ";color:#38bdf8}
+details.deep .inner{padding:.5rem 1.1rem 1rem}
+details.deep code{background:#334155;color:#e2e8f0}
+.diagram{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1rem;margin:1.2rem 0;overflow-x:auto;text-align:center}
+.legend{display:flex;gap:1.1rem;flex-wrap:wrap;font-size:.84rem;color:var(--muted);justify-content:center;margin-top:.6rem}
+.legend span{display:inline-flex;align-items:center;gap:.4rem}
+.dot{width:.85rem;height:.85rem;border-radius:3px;display:inline-block}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
+th{background:#f1f5f9}
+.toc{font-size:.95rem;columns:2;column-gap:2rem}
+.toc a{color:var(--brand);text-decoration:none;display:block;padding:.15rem 0}
+.toc a:hover{text-decoration:underline}
+footer{color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 1rem}
+@media(max-width:640px){.toc{columns:1}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<span class="badge-top">Manual de usuario · Sección Desarrollo</span>
+<h1>Desarrollar una app con ayuda de la IA</h1>
+<p>Cómo pasar de una idea a una aplicación funcionando, usando tu propia IA como asistente y SecureDoc como taller seguro.</p>
+</div></header>
+<main class="wrap">
+<div class="card toc">
+<a href="#que">1. ¿Qué es «Construir con IA»?</a>
+<a href="#mapa">2. El proceso de un vistazo</a>
+<a href="#definir">3. Etapa 1: Definir</a>
+<a href="#generar">4. Etapa 2: Generar</a>
+<a href="#preview">5. Previsualizar y publicar</a>
+<a href="#draftprod">6. Borrador vs. Producción</a>
+<a href="#biblio">7. Bibliotecas</a>
+<a href="#servicios">8. Servicios externos</a>
+<a href="#seg">9. Qué revisa SecureDoc por ti</a>
+</div>
+<h2 id="que">1. ¿Qué es «Construir con IA»?</h2>
+<div class="card">
+<p>SecureDoc no “adivina” tu app: te ayuda a <strong>describirla bien</strong>, prepara las instrucciones (los <em>prompts</em>) que le darás a <strong>tu</strong> IA de confianza (ChatGPT, Claude, Gemini…), y luego recibe el código que esa IA produce, lo <strong>revisa</strong> y lo pone a correr de forma segura dentro de la consola.</p>
+<p>Dicho simple: <strong>tú + tu IA</strong> escriben la app; <strong>SecureDoc</strong> es el taller que la define, la revisa, la prueba con datos de mentira y la publica con tus datos reales.</p>
+</div>
+<div class="note">Tu app será un único archivo <code>index.html</code>. No necesita configurar bases de datos ni inicios de sesión: SecureDoc es la pasarela de datos. Tú te concentras en qué debe hacer la app.</div>
+
+<h2 id="mapa">2. El proceso de un vistazo</h2>
+<p>Son dos etapas dentro del asistente, y luego una fase de prueba y publicación:</p>
+<div class="diagram">
+<svg viewBox="0 0 900 230" width="880" role="img" aria-label="Flujo de desarrollo en 5 pasos: Definir, Generar, Preparar, Previsualizar, Publicar" font-family="system-ui,sans-serif">
+<defs><marker id="ar" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/></marker></defs>
+<rect x="10" y="60" width="150" height="80" rx="12" fill="#eef2ff" stroke="#4f46e5"/>
+<text x="85" y="92" text-anchor="middle" font-weight="700" fill="#3730a3">1 · Definir</text>
+<text x="85" y="113" text-anchor="middle" font-size="12" fill="#4338ca">Describes la idea</text>
+<rect x="185" y="60" width="150" height="80" rx="12" fill="#eef2ff" stroke="#4f46e5"/>
+<text x="260" y="92" text-anchor="middle" font-weight="700" fill="#3730a3">2 · Generar</text>
+<text x="260" y="113" text-anchor="middle" font-size="12" fill="#4338ca">Prompt → tu IA</text>
+<rect x="360" y="60" width="150" height="80" rx="12" fill="#ecfeff" stroke="#0ea5e9"/>
+<text x="435" y="92" text-anchor="middle" font-weight="700" fill="#0369a1">3 · Preparar</text>
+<text x="435" y="113" text-anchor="middle" font-size="12" fill="#0284c7">Pegas el código</text>
+<rect x="535" y="60" width="150" height="80" rx="12" fill="#ecfeff" stroke="#0ea5e9"/>
+<text x="610" y="92" text-anchor="middle" font-weight="700" fill="#0369a1">4 · Previsualizar</text>
+<text x="610" y="113" text-anchor="middle" font-size="12" fill="#0284c7">Prueba (datos falsos)</text>
+<rect x="710" y="60" width="150" height="80" rx="12" fill="#ecfdf5" stroke="#059669"/>
+<text x="785" y="92" text-anchor="middle" font-weight="700" fill="#047857">5 · Publicar</text>
+<text x="785" y="113" text-anchor="middle" font-size="12" fill="#059669">Datos reales</text>
+<line x1="160" y1="100" x2="183" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+<line x1="335" y1="100" x2="358" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+<line x1="510" y1="100" x2="533" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+<line x1="685" y1="100" x2="708" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+<path d="M610 140 C610 185, 435 185, 435 142" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+<text x="522" y="205" text-anchor="middle" font-size="11" fill="#64748b">¿algo no cuadra? ajustas y vuelves a preparar</text>
+</svg>
+<div class="legend"><span><i class="dot" style="background:#4f46e5"></i>Dentro del asistente</span><span><i class="dot" style="background:#0ea5e9"></i>Prueba en la consola</span><span><i class="dot" style="background:#059669"></i>En uso real</span></div>
+</div>
+<div class="tip">Puedes dar tantas vueltas como quieras entre “preparar” y “previsualizar” sin tocar la versión en uso ni tus datos reales. Publicar es un paso aparte y deliberado.</div>
+<h2 id="definir">3. Etapa 1: Definir (ponerse de acuerdo en el “qué”)</h2>
+<div class="card">
+<p>Antes de escribir una sola línea de código, conviene dejar claro qué debe hacer la app. SecureDoc te acompaña así:</p>
+<ol class="steps">
+<li><strong>Escribes tu idea</strong> en pocas frases (qué problema resuelve, qué datos maneja).</li>
+<li>SecureDoc arma un <strong>“prompt de descubrimiento”</strong>: un texto que copias y pegas en tu IA para que te haga preguntas y te ayude a pensar la app.</li>
+<li>Conversas con tu IA hasta que, al final, te entregue una <strong>especificación funcional en formato JSON</strong> (una ficha ordenada de pantallas, datos, acciones y servicios).</li>
+<li>Pegas esa ficha en SecureDoc. La app la <strong>valida</strong>, te la <strong>resume</strong> en lenguaje claro y estima su <strong>complejidad</strong> (si es simple o conviene hacerla por piezas).</li>
+</ol>
+</div>
+<div class="note">La “especificación” es la única memoria del proyecto: se guarda <strong>solo la última versión</strong> (no hay historial). Si cambias de idea, defines de nuevo y la anterior se reemplaza.</div>
+<details class="deep"><summary>la especificación JSON y por qué el texto se “neutraliza”</summary><div class="inner">
+<p>El prompt se arma en <code>prompt-engine.js</code> con dos tipos de marcadores: <code>{{NOMBRE}}</code> (se rellena con tu texto) y <code>__X__</code> (queda literal para que la IA lo reproduzca y la app lo sustituya después). Tu texto libre pasa por una <strong>neutralización</strong>: se limpian secuencias como <code>{{ }}</code> o <code>__X__</code> para que una descripción no pueda “inyectar” instrucciones en las secciones fijas (ROL, REGLAS, FORMATO) del prompt. La especificación validada define, entre otras cosas, <code>conexiones</code> (servicios externos que la app dice usar), que luego se cruzan con lo realmente registrado.</p>
+</div></details>
+
+<h2 id="generar">4. Etapa 2: Generar (pedirle el código a tu IA)</h2>
+<div class="card">
+<p>Con la ficha lista, SecureDoc arma el <strong>prompt de desarrollo</strong>: las instrucciones completas para que tu IA escriba el <code>index.html</code> de la app, ya con las reglas de SecureDoc incluidas.</p>
+<ul>
+<li><strong>Apps simples:</strong> un solo prompt. Tu IA devuelve toda la app de una vez.</li>
+<li><strong>Apps complejas:</strong> SecureDoc puede dividir el trabajo <strong>por piezas</strong>. Pides cada pieza por separado y luego el asistente las <strong>une</strong> en una sola app.</li>
+</ul>
+<p>Copias el prompt, se lo das a tu IA, y traes de vuelta el código que te entregue.</p>
+</div>
+<div class="tip">¿Una pieza no quedó bien? Puedes regenerar solo esa pieza con una nota de ajuste, sin rehacer el resto.</div>
+<h2 id="preview">5. Preparar, previsualizar y publicar</h2>
+<div class="card">
+<ol class="steps">
+<li><strong>Pegas el código</strong> de tu IA en el asistente y pulsas <em>Preparar</em>.</li>
+<li>SecureDoc <strong>revisa</strong> ese código (ver sección 9), <strong>añade por su cuenta</strong> lo que falte (los <code>&lt;script&gt;</code> de tus bibliotecas y la declaración oficial de servicios) y te avisa si hay advertencias.</li>
+<li>Pulsas <em>Previsualizar</em>: la app arranca <strong>dentro de la consola</strong>, en una zona aislada, usando una colección de <strong>datos de prueba</strong> (<code>app-&lt;nombre&gt;__preview</code>). Lo que hagas aquí <strong>no toca</strong> tus datos reales.</li>
+<li>Cuando estés conforme, pulsas <em>Publicar</em>: ese borrador pasa a ser la versión <strong>en uso</strong>, y a partir de ahí opera sobre tus <strong>datos reales</strong>.</li>
+</ol>
+</div>
+<div class="warn">Si la revisión de seguridad encontró advertencias, para publicar deberás revisarlas y confirmarlas a conciencia (o corregir el código). No es un trámite: son avisos de cosas que podrían ser inseguras.</div>
+
+<h2 id="draftprod">6. Borrador vs. Producción (dos versiones, dos “cajas” de datos)</h2>
+<p>Cada app vive en dos estados a la vez. Entenderlo evita sustos:</p>
+<table>
+<tr><th>Aspecto</th><th>Borrador (Desarrollo)</th><th>Producción (En uso)</th></tr>
+<tr><td>Para qué sirve</td><td>Probar y afinar</td><td>Usarla de verdad</td></tr>
+<tr><td>Qué datos usa</td><td>De prueba, desechables (<code>__preview</code>)</td><td>Tus datos reales (<code>app-&lt;nombre&gt;</code>)</td></tr>
+<tr><td>Cómo se actualiza</td><td>Cada vez que previsualizas</td><td>Solo al pulsar <em>Publicar</em></td></tr>
+<tr><td>Dónde aparece</td><td>En el asistente de Desarrollo</td><td>En la sección <strong>Aplicaciones</strong></td></tr>
+</table>
+<div class="note">“Publicar” = promover el borrador a producción (y sube el número de versión). “Descartar” deja el borrador igual que la versión publicada. Tus datos reales nunca se tocan al editar o probar.</div>
+<details class="deep"><summary>dónde se guarda todo esto</summary><div class="inner">
+<p>El código de tus apps (borrador y producción) se guarda en <strong>nuestro</strong> Firestore, en tu documento <code>users/{uid}.devProjects</code>, con la forma <code>env:{ draft, prod }</code>. Si el borrador coincide con producción, no se guarda una copia duplicada del HTML (se marca <code>syncedToProd</code>). Los <strong>datos</strong> de las apps, en cambio, viven en <strong>tu</strong> Firebase, en colecciones <code>app-&lt;slug&gt;</code> (reales) y <code>app-&lt;slug&gt;__preview</code> (prueba).</p>
+</div></details>
+<h2 id="biblio">7. Bibliotecas (piezas que reutilizas entre apps)</h2>
+<div class="card">
+<p>Si creas algo útil que quieres usar en varias apps —un componente visual (por ejemplo un campo numérico con calculadora) o una lógica de datos (por ejemplo resolver una tasa de cambio)— lo guardas como <strong>Biblioteca</strong>: un único archivo <code>lib.js</code>.</p>
+<p>Tus bibliotecas viven en un repositorio público propio llamado <code>securedoc-libs</code> (se crea la primera vez). Cualquier app tuya las carga con una línea:</p>
+<p><code>&lt;script src="https://cdn.jsdelivr.net/gh/{usuario}/securedoc-libs@main/{nombre}/lib.js"&gt;&lt;/script&gt;</code></p>
+<p>Al preparar el código, SecureDoc <strong>garantiza</strong> esa línea aunque tu IA se haya olvidado de copiarla.</p>
+</div>
+<div class="note">La biblioteca se ejecuta <strong>dentro de la misma app</strong> (mismo espacio aislado), no como una app aparte. Por eso es código de confianza que tú mantienes.</div>
+
+<h2 id="servicios">8. Servicios externos (consultar una API con token)</h2>
+<div class="card">
+<p>Una app puede consultar un servicio web de <strong>solo lectura</strong> (que responde en JSON y pide un token). La clave está en que <strong>la app nunca ve la URL ni el token</strong>: pide “por nombre” y SecureDoc hace la llamada por ella.</p>
+<ol class="steps">
+<li>En Desarrollo registras el servicio por su <strong>nombre</strong> y pegas el texto con que el administrador explica cómo usarlo. Tu IA propone la “declaración” (qué valores acepta) y SecureDoc la valida.</li>
+<li>La app pedirá datos con <code>SecureDoc.api.call("nombre", {…})</code>.</li>
+<li>Al <strong>usar</strong> la app, la consola te pide la URL, el token y su vencimiento; te hace <strong>confirmar el servidor</strong> al que viajará el token y lo guarda <strong>cifrado con tu frase</strong>.</li>
+</ol>
+</div>
+<div class="warn">Si el texto del administrador parece contener un token de verdad, SecureDoc lo <strong>bloquea</strong> hasta que lo quites: los secretos no van en la declaración ni en los prompts.</div>
+<p>Hay un documento de apoyo dedicado a los servicios en la sección <strong>Aplicaciones</strong> (cómo se conecta y se usa un servicio al correr la app).</p>
+<h2 id="seg">9. Qué revisa SecureDoc por ti (red de seguridad)</h2>
+<div class="card">
+<p>El código lo escribe tu IA, pero no se publica “a ciegas”. Al preparar, SecureDoc:</p>
+<ul>
+<li>pasa una <strong>revisión de seguridad</strong> sobre el HTML y te lista advertencias;</li>
+<li><strong>reemplaza</strong> la declaración de servicios por la oficial (la que escribió la IA no se usa) y comprueba que el código la respete;</li>
+<li>te avisa si la app declara un servicio <strong>no registrado</strong> (no tendrías cómo conectarlo);</li>
+<li>añade los <code>&lt;script&gt;</code> de las bibliotecas usadas.</li>
+</ul>
+<p>Y cuando la app corre, lo hace <strong>aislada</strong> (ver el manual de la sección Aplicaciones): no puede tocar la consola, tus secretos ni tus otras apps.</p>
+</div>
+<details class="deep"><summary>por qué estas reglas no son opcionales</summary><div class="inner">
+<p>Las apps se ejecutan en un marco aislado de <strong>origen opaco</strong> y acceden a datos solo por un canal cerrado de mensajes. Por eso se prohíben cosas como eventos en línea (<code>onclick="…"</code>), <code>eval</code>, <code>document.write</code> o inyectar datos del usuario como HTML. La revisión busca justo esos patrones. Si confirmas una advertencia, asumes el riesgo de ese fragmento concreto.</p>
+</div></details>
+<div class="tip">Resumen: <strong>tú defines, tu IA programa, SecureDoc revisa, prueba y publica.</strong> Siempre puedes volver atrás sin tocar tus datos reales.</div>
+
+</main>
+<footer>SecureDoc — Manual de usuario. Documento de apoyo de la sección <strong>Desarrollo</strong>.</footer>
+</body>
+</html>
