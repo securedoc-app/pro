@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo desarrollar una app con ayuda de la IA — SecureDoc</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#1f2937;--muted:#6b7280;--brand:#4f46e5;--brand2:#0ea5e9;--ok:#059669;--warn:#d97706;--line:#e5e7eb}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+header.top{background:linear-gradient(135deg,#4f46e5,#0ea5e9);color:#fff;padding:2.2rem 1.2rem}
+.wrap{max-width:960px;margin:0 auto;padding:0 1.1rem}
+header.top h1{margin:.2rem 0;font-size:1.8rem}
+header.top p{margin:0;opacity:.93}
+.badge-top{display:inline-block;background:rgba(255,255,255,.2);padding:.2rem .7rem;border-radius:999px;font-size:.8rem;margin-bottom:.5rem}
+main{padding:1.4rem 0 3rem}
+h2{margin-top:2.2rem;font-size:1.35rem;border-bottom:2px solid var(--line);padding-bottom:.35rem}
+h3{font-size:1.08rem;margin-top:1.4rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.3rem;margin:1rem 0;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+ol.steps li{position:relative;padding:.6rem 0 .6rem 2.8rem;border-bottom:1px dashed var(--line)}
+ol.steps li:last-child{border-bottom:0}
+ol.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:.55rem;width:1.9rem;height:1.9rem;background:var(--brand);color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem}
+.note,.tip,.warn{border-radius:10px;padding:.8rem 1rem;margin:1rem 0;font-size:.96rem}
+.note{background:#eef2ff;border-left:4px solid var(--brand)}
+.tip{background:#ecfdf5;border-left:4px solid var(--ok)}
+.warn{background:#fffbeb;border-left:4px solid var(--warn)}
+code{background:#eef2ff;padding:.08rem .35rem;border-radius:5px;font-size:.9em}
+pre.code-block{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:1rem 1.1rem;margin:1rem 0;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86rem;line-height:1.5}
+pre.code-block code{background:transparent;color:inherit;padding:0;font-size:inherit}
+details.deep{background:#0f172a;color:#e2e8f0;border-radius:10px;margin:1rem 0;overflow:hidden}
+details.deep>summary{cursor:pointer;padding:.8rem 1rem;background:#1e293b;font-weight:600;list-style:none}
+details.deep>summary::before{content:"\25B8  Profundidad técnica — ";color:#38bdf8;font-weight:700}
+details.deep[open]>summary::before{content:"\25BE  Profundidad técnica — ";color:#38bdf8}
+details.deep .inner{padding:.5rem 1.1rem 1rem}
+details.deep code{background:#334155;color:#e2e8f0}
+.diagram{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1rem;margin:1.2rem 0;overflow-x:auto;text-align:center}
+.legend{display:flex;gap:1.1rem;flex-wrap:wrap;font-size:.84rem;color:var(--muted);justify-content:center;margin-top:.6rem}
+.legend span{display:inline-flex;align-items:center;gap:.4rem}
+.dot{width:.85rem;height:.85rem;border-radius:3px;display:inline-block}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
+th{background:#f1f5f9}
+.toc{font-size:.95rem;columns:2;column-gap:2rem}
+.toc a{color:var(--brand);text-decoration:none;display:block;padding:.15rem 0}
+.toc a:hover{text-decoration:underline}
+footer{color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 1rem}
+@media(max-width:640px){.toc{columns:1}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<span class="badge-top">Manual de usuario · Sección Desarrollo</span>
+<h1>Desarrollar una app con ayuda de la IA</h1>
+<p>Cómo pasar de una idea a una aplicación funcionando, usando tu propia IA como asistente y SecureDoc como taller seguro.</p>
+</div></header>
+<main class="wrap">
+<div class="card toc">
+<a href="#que">1. ¿Qué es «Construir con IA»?</a>
+<a href="#mapa">2. El proceso de un vistazo</a>
+<a href="#definir">3. Fase 1: Definir</a>
+<a href="#generar">4. Fases 2-5: Afinar, Librerías, Servicios y Código</a>
+<a href="#preview">5. Fases 6-7: Vista previa y publicar</a>
+<a href="#draftprod">6. Borrador vs. Producción</a>
+<a href="#biblio">7. Bibliotecas</a>
+<a href="#servicios">8. Servicios externos</a>
+<a href="#geo">9. Ubicación del dispositivo</a>
+<a href="#archivos">10. Archivos del usuario</a>
+<a href="#cruzado">11. Datos de otras apps</a>
+<a href="#seg">12. Qué revisa SecureDoc por ti</a>
+</div>
+<h2 id="que">1. ¿Qué es «Construir con IA»?</h2>
+<div class="card">
+<p>SecureDoc no “adivina” tu app: te ayuda a <strong>describirla bien</strong>, prepara las instrucciones (los <em>prompts</em>) que le darás a <strong>tu</strong> IA de confianza (ChatGPT, Claude, Gemini…), y luego recibe el código que esa IA produce, lo <strong>revisa</strong> y lo pone a correr de forma segura dentro de la consola.</p>
+<p>Dicho simple: <strong>tú + tu IA</strong> escriben la app; <strong>SecureDoc</strong> es el taller que la define, la revisa, la prueba con datos de mentira y la publica con tus datos reales.</p>
+</div>
+<div class="note">Tu app será un único archivo <code>index.html</code>. No necesita configurar bases de datos ni inicios de sesión: SecureDoc es la pasarela de datos. Tú te concentras en qué debe hacer la app.</div>
+
+<h2 id="mapa">2. El proceso de un vistazo</h2>
+<p>Son <strong>7 fases</strong> dentro del asistente, con un paso visual arriba (círculos numerados). Puedes <strong>retroceder libremente</strong> a cualquier fase ya visitada para ajustar algo:</p>
+<div class="diagram">
+<svg viewBox="0 0 900 230" width="880" role="img" aria-label="Flujo de desarrollo en 7 fases: Definir, Afinar, Librerías, Servicios, Código, Vista previa, Publicar" font-family="system-ui,sans-serif">
+<defs><marker id="ar" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#64748b"/></marker></defs>
+<rect x="6" y="60" width="116" height="80" rx="12" fill="#eef2ff" stroke="#4f46e5"/>
+<text x="64" y="92" text-anchor="middle" font-weight="700" fill="#3730a3">1 · Definir</text>
+<text x="64" y="113" text-anchor="middle" font-size="11" fill="#4338ca">Describes la idea</text>
+<rect x="130" y="60" width="116" height="80" rx="12" fill="#eef2ff" stroke="#4f46e5"/>
+<text x="188" y="92" text-anchor="middle" font-weight="700" fill="#3730a3">2 · Afinar</text>
+<text x="188" y="113" text-anchor="middle" font-size="11" fill="#4338ca">Revisas el resumen</text>
+<rect x="254" y="60" width="116" height="80" rx="12" fill="#f5f3ff" stroke="#7c3aed"/>
+<text x="312" y="92" text-anchor="middle" font-weight="700" fill="#5b21b6">3 · Librerías</text>
+<text x="312" y="113" text-anchor="middle" font-size="11" fill="#6d28d9">Piezas que reutilizas</text>
+<rect x="378" y="60" width="116" height="80" rx="12" fill="#ecfeff" stroke="#0ea5e9"/>
+<text x="436" y="92" text-anchor="middle" font-weight="700" fill="#0369a1">4 · Servicios</text>
+<text x="436" y="113" text-anchor="middle" font-size="11" fill="#0284c7">APIs y datos</text>
+<rect x="502" y="60" width="116" height="80" rx="12" fill="#ecfeff" stroke="#0ea5e9"/>
+<text x="560" y="92" text-anchor="middle" font-weight="700" fill="#0369a1">5 · Código</text>
+<text x="560" y="113" text-anchor="middle" font-size="11" fill="#0284c7">Prompt → tu IA</text>
+<rect x="626" y="60" width="116" height="80" rx="12" fill="#ecfeff" stroke="#0ea5e9"/>
+<text x="684" y="92" text-anchor="middle" font-weight="700" fill="#0369a1">6 · Vista previa</text>
+<text x="684" y="113" text-anchor="middle" font-size="11" fill="#0284c7">Prueba (datos falsos)</text>
+<rect x="750" y="60" width="130" height="80" rx="12" fill="#ecfdf5" stroke="#059669"/>
+<text x="815" y="92" text-anchor="middle" font-weight="700" fill="#047857">7 · Publicar</text>
+<text x="815" y="113" text-anchor="middle" font-size="11" fill="#059669">Datos reales</text>
+<line x1="122" y1="100" x2="128" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+<line x1="246" y1="100" x2="252" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+<line x1="370" y1="100" x2="376" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+<line x1="494" y1="100" x2="500" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+<line x1="618" y1="100" x2="624" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+<line x1="742" y1="100" x2="748" y2="100" stroke="#64748b" stroke-width="2" marker-end="url(#ar)"/>
+<path d="M667 140 C667 190, 519 190, 519 142" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+<text x="593" y="210" text-anchor="middle" font-size="11" fill="#64748b">¿algo no cuadra? retrocedes a cualquier fase y vuelves a avanzar</text>
+</svg>
+<div class="legend"><span><i class="dot" style="background:#4f46e5"></i>Dentro del asistente</span><span><i class="dot" style="background:#0ea5e9"></i>Prueba en la consola</span><span><i class="dot" style="background:#059669"></i>En uso real</span></div>
+</div>
+<div class="tip">El paso visual permite <strong>retroceso libre</strong>: puedes volver a cualquier fase ya visitada para ajustar algo y luego seguir, sin tocar la versión en uso ni tus datos reales. Publicar (fase 7) es un paso aparte y deliberado.</div>
+<h2 id="definir">3. Fase 1: Definir (ponerse de acuerdo en el “qué”)</h2>
+<div class="card">
+<p>Antes de escribir una sola línea de código, conviene dejar claro qué debe hacer la app. SecureDoc te acompaña así:</p>
+<ol class="steps">
+<li><strong>Le pones un nombre</strong> a la app (corto y reconocible). Con él SecureDoc preparará tu espacio de trabajo la primera vez que publiques; puedes cambiarlo mientras no la hayas publicado.</li>
+<li><strong>Escribes tu idea</strong> en pocas frases (qué problema resuelve, qué datos maneja).</li>
+<li>SecureDoc arma un <strong>“prompt de descubrimiento”</strong>: un texto que copias y pegas en tu IA para que te haga preguntas y te ayude a pensar la app.</li>
+<li>Conversas con tu IA hasta que, al final, te entregue una <strong>especificación funcional en formato JSON</strong> (una ficha ordenada de pantallas, datos, acciones y servicios).</li>
+<li>Pegas esa ficha en SecureDoc. La app la <strong>valida</strong>, te la <strong>resume</strong> en lenguaje claro y estima su <strong>complejidad</strong> (si es simple o conviene hacerla por piezas).</li>
+</ol>
+</div>
+<div class="note">La “especificación” es la única memoria del proyecto: se guarda <strong>solo la última versión</strong> (no hay historial). Si cambias de idea, defines de nuevo y la anterior se reemplaza.</div>
+<details class="deep"><summary>la especificación JSON y por qué el texto se “neutraliza”</summary><div class="inner">
+<p>El prompt se arma en <code>prompt-engine.js</code> con dos tipos de marcadores: <code>{{NOMBRE}}</code> (se rellena con tu texto) y <code>__X__</code> (queda literal para que la IA lo reproduzca y la app lo sustituya después). Tu texto libre pasa por una <strong>neutralización</strong>: se limpian secuencias como <code>{{ }}</code> o <code>__X__</code> para que una descripción no pueda “inyectar” instrucciones en las secciones fijas (ROL, REGLAS, FORMATO) del prompt. La especificación validada define, entre otras cosas, <code>conexiones</code> (servicios externos que la app dice usar), que luego se cruzan con lo realmente registrado.</p>
+</div></details>
+
+<h2 id="generar">4. Fases 2-5: Afinar, Librerías, Servicios y generar el código</h2>
+<div class="card">
+<p>Tras definir, el asistente te lleva por cuatro fases cortas:</p>
+<ul>
+<li><strong>Fase 2 · Afinar:</strong> revisas el <strong>resumen</strong> de la definición (datos, pantallas, menú, servicios y librerías) y marcas, si aplica, las <strong>apps vinculadas</strong>. Si algo no encaja, vuelves a la fase 1 y ajustas con tu IA.</li>
+<li><strong>Fase 3 · Librerías:</strong> eliges las <strong>librerías</strong> que usará la app: las <strong>propias</strong> (piezas tuyas que ya publicaste) y, por cada necesidad, una <strong>externa</strong> de confianza (gráficos, mapas, animaciones) o <em>Ninguna</em>. Lo que elijas se añade automáticamente al código. Puedes dejarla vacía.</li>
+<li><strong>Fase 4 · Servicios:</strong> registras los <strong>servicios externos</strong> (APIs con token) que usará la app y confirmas la colección donde vivirán sus datos. También puedes dejarla vacía.</li>
+<li><strong>Fase 5 · Código:</strong> con la ficha lista, SecureDoc arma el <strong>prompt de desarrollo</strong>.</li>
+</ul>
+<ul>
+<li><strong>Apps simples:</strong> un solo prompt. Tu IA devuelve toda la app de una vez.</li>
+<li><strong>Apps complejas:</strong> SecureDoc puede dividir el trabajo <strong>por piezas</strong>. Pides cada pieza por separado y luego el asistente las <strong>une</strong> en una sola app.</li>
+</ul>
+<p>Copias el prompt, se lo das a tu IA, y traes de vuelta el código que te entregue.</p>
+</div>
+<div class="tip">En cualquier modo, el resultado es el mismo: <strong>una sola app</strong>. «Por piezas» sirve para apps grandes, no para obtener algo distinto.</div>
+<div class="tip">¿Una pieza no quedó bien? Puedes regenerar solo esa pieza con una nota de ajuste, sin rehacer el resto.</div>
+<h2 id="preview">5. Fases 6-7: Preparar, previsualizar y publicar</h2>
+<div class="card">
+<ol class="steps">
+<li><strong>Pegas el código</strong> de tu IA en el asistente y pulsas <em>Preparar</em>.</li>
+<li>SecureDoc <strong>revisa</strong> ese código (ver sección 9), <strong>añade por su cuenta</strong> lo que falte (los <code>&lt;script&gt;</code> de tus bibliotecas y la declaración oficial de servicios) y te avisa si hay advertencias.</li>
+<li>Pulsas <em>Previsualizar</em>: la app arranca <strong>dentro de la consola</strong>, en una zona aislada, usando una colección de <strong>datos de prueba</strong> (<code>app-&lt;nombre&gt;__preview</code>). Lo que hagas aquí <strong>no toca</strong> tus datos reales. Verás además un <strong>mini-checklist</strong> («¿Falta algo para publicar?») con lo que está listo y lo que aún bloquea o condiciona la publicación.</li>
+<li>Cuando estés conforme, pulsas <em>Publicar</em>: ese borrador pasa a ser la versión <strong>en uso</strong>, y a partir de ahí opera sobre tus <strong>datos reales</strong>.</li>
+</ol>
+</div>
+<div class="warn">Si la revisión de seguridad encontró advertencias, para publicar deberás revisarlas y confirmarlas a conciencia (o corregir el código). No es un trámite: son avisos de cosas que podrían ser inseguras.</div>
+
+<div class="note">La <strong>primera vez</strong> que publicas una app, SecureDoc crea solo su espacio en GitHub (los repositorios de desarrollo y producción, GitHub Pages y el flujo de publicación). Por eso el nombre es obligatorio antes de publicar. Mientras no publiques, el proyecto es un <strong>borrador</strong> que puedes retomar cuando quieras.</div>
+
+<h2 id="draftprod">6. Borrador vs. Producción (dos versiones, dos “cajas” de datos)</h2>
+<p>Cada app vive en dos estados a la vez. Entenderlo evita sustos:</p>
+<table>
+<tr><th>Aspecto</th><th>Borrador (Desarrollo)</th><th>Producción (En uso)</th></tr>
+<tr><td>Para qué sirve</td><td>Probar y afinar</td><td>Usarla de verdad</td></tr>
+<tr><td>Qué datos usa</td><td>De prueba, desechables (<code>__preview</code>)</td><td>Tus datos reales (<code>app-&lt;nombre&gt;</code>)</td></tr>
+<tr><td>Cómo se actualiza</td><td>Cada vez que previsualizas</td><td>Solo al pulsar <em>Publicar</em></td></tr>
+<tr><td>Dónde aparece</td><td>En el asistente de Desarrollo</td><td>En la sección <strong>Aplicaciones</strong></td></tr>
+</table>
+<div class="note">“Publicar” = promover el borrador a producción (y sube el número de versión). “Descartar” deja el borrador igual que la versión publicada. Tus datos reales nunca se tocan al editar o probar.</div>
+<details class="deep"><summary>dónde se guarda todo esto</summary><div class="inner">
+<p>El código de tus apps (borrador y producción) se guarda en <strong>nuestro</strong> Firestore, en tu documento <code>users/{uid}.devProjects</code>, con la forma <code>env:{ draft, prod }</code>. Si el borrador coincide con producción, no se guarda una copia duplicada del HTML (se marca <code>syncedToProd</code>). Los <strong>datos</strong> de las apps, en cambio, viven en <strong>tu</strong> Firebase, en colecciones <code>app-&lt;slug&gt;</code> (reales) y <code>app-&lt;slug&gt;__preview</code> (prueba).</p>
+</div></details>
+<h2 id="biblio">7. Bibliotecas (piezas que reutilizas entre apps)</h2>
+<div class="card">
+<p>Si creas algo útil que quieres usar en varias apps —un componente visual (por ejemplo un campo numérico con calculadora) o una lógica de datos (por ejemplo resolver una tasa de cambio)— lo guardas como <strong>Biblioteca</strong>: un único archivo <code>lib.js</code>.</p>
+<p>Tus bibliotecas viven en un repositorio público propio llamado <code>securedoc-libs</code> (se crea la primera vez). Cualquier app tuya las carga con una línea:</p>
+<p><code>&lt;script src="https://cdn.jsdelivr.net/gh/{usuario}/securedoc-libs@main/{nombre}/lib.js"&gt;&lt;/script&gt;</code></p>
+<p>Al preparar el código, SecureDoc <strong>garantiza</strong> esa línea aunque tu IA se haya olvidado de copiarla.</p>
+</div>
+<div class="note">La biblioteca se ejecuta <strong>dentro de la misma app</strong> (mismo espacio aislado), no como una app aparte. Por eso es código de confianza que tú mantienes.</div>
+
+<h2 id="servicios">8. Servicios externos (consultar una API con token)</h2>
+<div class="card">
+<p>Una app puede consultar un servicio web de <strong>solo lectura</strong> (que responde en JSON y pide un token). La clave está en que <strong>la app nunca ve la URL ni el token</strong>: pide “por nombre” y SecureDoc hace la llamada por ella.</p>
+<ol class="steps">
+<li>En Desarrollo registras el servicio por su <strong>nombre</strong> y pegas el texto con que el administrador explica cómo usarlo. Tu IA propone la “declaración” (qué valores acepta) y SecureDoc la valida.</li>
+<li>La app pedirá datos con <code>SecureDoc.api.call("nombre", {…})</code>.</li>
+<li>Al <strong>usar</strong> la app, la consola te pide la URL, el token y su vencimiento; te hace <strong>confirmar el servidor</strong> al que viajará el token y lo guarda <strong>cifrado con tu frase</strong>.</li>
+</ol>
+</div>
+<div class="warn">Si el texto del administrador parece contener un token de verdad, SecureDoc lo <strong>bloquea</strong> hasta que lo quites: los secretos no van en la declaración ni en los prompts.</div>
+<p>Hay un documento de apoyo dedicado a los servicios en la sección <strong>Aplicaciones</strong> (cómo se conecta y se usa un servicio al correr la app).</p>
+<h2 id="geo">9. Ubicación del dispositivo (geolocalización)</h2>
+<div class="card">
+<p>Si tu app necesita saber <strong>dónde está el usuario</strong> (registrar el lugar de una incidencia, calcular una distancia, etc.), SecureDoc ofrece una llamada sencilla. Como la app corre en un marco aislado y no puede acceder al GPS por su cuenta, es la <strong>consola</strong> quien obtiene la ubicación y se la pasa a la app.</p>
+<p>En el código se usa así:</p>
+<p><code>const { lat, lng, accuracy } = await SecureDoc.geo.current();</code></p>
+<ul>
+<li><code>lat</code> y <code>lng</code>: latitud y longitud.</li>
+<li><code>accuracy</code>: precisión aproximada en metros (puede venir <code>null</code> si el navegador no la informa).</li>
+</ul>
+<p>La <strong>primera vez</strong>, el navegador le pide permiso al usuario. Si lo niega, la promesa falla con <code>{ code: "permission-denied" }</code>; si no se puede obtener (sin señal, se agota el tiempo o el navegador no la soporta), falla con <code>{ code: "unavailable" }</code>. Trata siempre ese error con <code>.catch</code> (o <code>try/catch</code>) y muestra un aviso claro, sin bloquear la app esperándolo.</p>
+</div>
+<div class="note">La ubicación es <strong>opcional</strong>: pídela solo si tu app realmente la necesita. El permiso lo gestiona el navegador del usuario, no SecureDoc.</div>
+<h3>Ejemplo completo con manejo de errores</h3>
+<p>Un botón que pide la ubicación, muestra el resultado y <strong>trata siempre el error</strong> distinguiendo permiso denegado de no disponible:</p>
+<pre class="code-block"><code>SecureDoc.ready(function () {
+  var boton = document.getElementById("ubicar");
+  var salida = document.getElementById("resultado");
+
+  boton.addEventListener("click", function () {
+    boton.disabled = true;
+    salida.textContent = "Obteniendo ubicación…";
+
+    SecureDoc.geo.current()
+      .then(function (pos) {
+        var txt = "Lat: " + pos.lat + "  Lng: " + pos.lng;
+        if (pos.accuracy != null) {
+          txt += "  (±" + Math.round(pos.accuracy) + " m)";
+        }
+        salida.textContent = txt;
+      })
+      .catch(function (err) {
+        if (err &amp;&amp; err.code === "permission-denied") {
+          salida.textContent = "Permiso de ubicación denegado por el usuario.";
+        } else if (err &amp;&amp; err.code === "unavailable") {
+          salida.textContent = "No se pudo obtener la ubicación (sin señal o no soportada).";
+        } else {
+          salida.textContent = "Error inesperado al obtener la ubicación.";
+        }
+      })
+      .finally(function () {
+        boton.disabled = false;
+      });
+  });
+});</code></pre>
+<div class="tip">Si prefieres <code>async/await</code>, envuelve la llamada en <code>try/catch</code>: <code>try { const { lat, lng, accuracy } = await SecureDoc.geo.current(); } catch (err) { /* err.code es "permission-denied" o "unavailable" */ }</code>. Recuerda que <code>accuracy</code> puede venir <code>null</code>.</div>
+<h2 id="archivos">10. Archivos del usuario</h2>
+<div class="card">
+<p>Además de los datos (que van por <code>SecureDoc.data.*</code>), tu app puede trabajar con <strong>archivos</strong> del usuario —documentos, imágenes, PDF, adjuntos— a través de <code>SecureDoc.files.*</code>. Igual que con la ubicación, la app no toca GitHub directamente: la <strong>consola</strong> usa tu cuenta y tu token (que nunca entra en la app) para leer y escribir por ti.</p>
+<p><strong>Permisos (importante):</strong></p>
+<ul>
+<li><strong>Leer</strong> (<code>repos</code>, <code>list</code>, <code>read</code>, <code>url</code>): tu app puede leer de <strong>cualquiera</strong> de tus repositorios de archivos registrados.</li>
+<li><strong>Escribir o borrar</strong> (<code>save</code>, <code>remove</code>): solo en el <strong>repositorio propio</strong> de la app, uno privado que SecureDoc crea para ella. No puede tocar los demás.</li>
+</ul>
+<p>La primera vez que la app quiera guardar algo, llama a <code>requestRepo()</code>: SecureDoc crea ese repositorio (con un nombre que decide él) y te pide una <strong>confirmación ligera</strong>. A partir de ahí aparece en la sección <strong>Archivos</strong>, marcado con el nombre de la app.</p>
+</div>
+<div class="note">Límites: leer texto con <code>read()</code> hasta <strong>1 MB</strong>; abrir binarios con <code>url()</code> y guardar con <code>save()</code> hasta <strong>5 MB</strong>. Para imágenes o PDF usa siempre <code>url()</code> (no <code>read()</code>).</div>
+<h3>Las llamadas disponibles</h3>
+<pre class="code-block"><code>SecureDoc.files.repos()                    // lista tus repos de archivos (todos de lectura)
+SecureDoc.files.list(repoId, carpeta)      // contenido de una carpeta
+SecureDoc.files.read(repoId, ruta)         // lee un archivo de TEXTO (≤ 1 MB)
+SecureDoc.files.url(repoId, ruta)          // URL usable en &lt;img&gt;/&lt;a&gt; (binario, ≤ 5 MB)
+SecureDoc.files.requestRepo()              // crea/obtiene el repo PROPIO de la app
+SecureDoc.files.save(ruta, contenido)      // guarda en el repo PROPIO (≤ 5 MB)
+SecureDoc.files.remove(ruta)               // borra del repo PROPIO</code></pre>
+<h3>Ejemplo: leer un archivo de texto</h3>
+<pre class="code-block"><code>SecureDoc.ready(function () {
+  SecureDoc.files.repos()
+    .then(function (repos) {
+      if (!repos.length) return;
+      return SecureDoc.files.read(repos[0].id, "notas/hoy.txt");
+    })
+    .then(function (archivo) {
+      if (archivo) document.getElementById("salida").textContent = archivo.text;
+    })
+    .catch(function (err) {
+      document.getElementById("salida").textContent = "No se pudo leer: " + (err &amp;&amp; err.message);
+    });
+});</code></pre>
+<h3>Ejemplo: guardar en el repositorio propio</h3>
+<pre class="code-block"><code>SecureDoc.ready(function () {
+  // 1) Asegura el repositorio propio (la 1ª vez pide confirmación)
+  SecureDoc.files.requestRepo()
+    .then(function () {
+      // 2) Ahora sí puedes guardar texto…
+      return SecureDoc.files.save("notas/hoy.txt", "Hola mundo");
+    })
+    .then(function (r) {
+      console.log("Guardado:", r.path, r.size, "bytes");
+    })
+    .catch(function (err) {
+      // Si el usuario no autoriza, err.code === "permission-denied"
+      console.warn("No se pudo guardar:", err &amp;&amp; err.message);
+    });
+});</code></pre>
+<h3>Mostrar una imagen (binario)</h3>
+<pre class="code-block"><code>SecureDoc.files.url(repoId, "fotos/portada.jpg")
+  .then(function (f) {
+    var img = document.getElementById("portada");
+    img.src = f.url;
+    // Libera la URL cuando ya no la necesites:
+    img.addEventListener("load", function () { URL.revokeObjectURL(f.url); });
+  })
+  .catch(function (err) { /* trata err.code / err.message */ });</code></pre>
+<div class="tip"><code>SecureDoc.files.*</code> es <strong>opcional</strong>: úsalo solo si tu app necesita archivos. Trata siempre los errores con <code>.catch</code> (o <code>try/catch</code>); llegan como <code>{ code, message }</code>.</div>
+<h2 id="cruzado">11. Datos de otras apps (acceso cruzado)</h2>
+<div class="card">
+<p>Normalmente cada app trabaja solo con sus propios datos (<code>SecureDoc.data.*</code>). Pero a veces una app necesita <strong>leer o anotar</strong> en los datos de <strong>otra app tuya</strong>: por ejemplo, que «Mis Finanzas» consulte los gastos que registra «Gestión de Gastos». Para eso existe <code>SecureDoc.db.*</code>.</p>
+<p>La regla de oro: tu app <strong>no conoce</strong> ni nombra colecciones de la base de datos. Solo trabaja por el <strong>slug</strong> (el identificador corto) de la otra app, y SecureDoc traduce ese slug a la colección correcta por detrás.</p>
+<p><strong>Qué puede hacer y qué no:</strong></p>
+<ul>
+<li><strong>Declarar primero.</strong> En la etapa de Definir, la ficha de la app lista en <code>appsVinculadas</code> los slugs de las apps a las que quiere acceder. Si una app no está declarada ahí, <code>SecureDoc.db.*</code> no la deja tocarla.</li>
+<li><strong>Leer</strong> (<code>apps</code>, <code>list</code>, <code>get</code>, <code>watch</code>): puede consultar y escuchar los datos de las apps vinculadas.</li>
+<li><strong>Escribir solo altas y cambios</strong> (<code>add</code>, <code>update</code>): puede crear registros nuevos o actualizar existentes en la app vinculada. <strong>No</strong> puede <strong>borrar</strong> datos de otra app (no hay <code>remove</code> cruzado); borrar sigue siendo cosa de la app dueña.</li>
+<li><strong>Mismo ambiente.</strong> El borrador (preview) solo ve datos de preview; la versión en uso solo ve datos reales. Nunca se mezclan.</li>
+</ul>
+<p>La <strong>primera vez</strong> que una app quiere acceder a otra, SecureDoc te pide una <strong>confirmación</strong> explícita, por cada par origen→destino. Verás un aviso como: <em>«AppX» quiere leer y escribir en los datos de «AppY». ¿Autorizas?</em> Una vez autorizado ese par, no vuelve a preguntar.</p>
+</div>
+<div class="note">Las entidades y campos de cada app vinculada se los pasa SecureDoc a tu IA al generar el código, para que use los nombres correctos. <strong>No necesitas escribir slugs a mano:</strong> cuando SecureDoc valida tu definición, en el resumen aparece el bloque <strong>«Datos de otras apps (acceso cruzado)»</strong> con una casilla por cada app tuya; marca las que quieras vincular y se guardan solas. Tú solo decides qué apps vincular.</div>
+<h3>Las llamadas disponibles</h3>
+<pre class="code-block"><code>SecureDoc.db.apps()                        // apps que esta app puede usar: [{ id, name, mine }]
+SecureDoc.db.list(appId, opciones)         // registros de la otra app (filtros/orden en opciones)
+SecureDoc.db.get(appId, id)                // un registro por su id
+SecureDoc.db.add(appId, datos)             // crea un registro en la otra app
+SecureDoc.db.update(appId, id, patch)      // actualiza un registro de la otra app
+SecureDoc.db.watch(appId, opciones, cb)    // escucha cambios en vivo (cuenta en el límite de 5)</code></pre>
+<div class="note">El <code>appId</code> es el <strong>slug</strong> de la otra app (el mismo que devuelve <code>db.apps()</code> en <code>id</code>). Igual que con tus propios datos, <strong>no</strong> hay un parámetro de «entidad»: cada app es una sola colección; si guardas varios tipos de registro, distin­gue­los con un campo tuyo (por ejemplo <code>tipo</code>).</div>
+<h3>Ejemplo: leer registros de otra app</h3>
+<pre class="code-block"><code>SecureDoc.ready(function () {
+  // "gestion-de-gastos" debe estar declarada en appsVinculadas
+  SecureDoc.db.list("gestion-de-gastos")
+    .then(function (gastos) {
+      var total = gastos.reduce(function (s, g) { return s + (g.monto || 0); }, 0);
+      document.getElementById("total").textContent = total.toFixed(2);
+    })
+    .catch(function (err) {
+      document.getElementById("total").textContent = "No se pudo leer: " + (err &amp;&amp; err.message);
+    });
+});</code></pre>
+<div class="tip"><code>SecureDoc.db.*</code> es <strong>opcional</strong>: úsalo solo si tu app realmente necesita datos de otra. Trata siempre los errores con <code>.catch</code> (o <code>try/catch</code>); llegan como <code>{ code, message }</code> (por ejemplo <code>permission-denied</code> si el par no está autorizado o la app no está vinculada).</div>
+<h2 id="seg">12. Qué revisa SecureDoc por ti (red de seguridad)</h2>
+<div class="card">
+<p>El código lo escribe tu IA, pero no se publica “a ciegas”. Al preparar, SecureDoc:</p>
+<ul>
+<li>pasa una <strong>revisión de seguridad</strong> sobre el HTML y te lista advertencias;</li>
+<li><strong>reemplaza</strong> la declaración de servicios por la oficial (la que escribió la IA no se usa) y comprueba que el código la respete;</li>
+<li>te avisa si la app declara un servicio <strong>no registrado</strong> (no tendrías cómo conectarlo);</li>
+<li>añade los <code>&lt;script&gt;</code> de las bibliotecas usadas.</li>
+</ul>
+<p>Y cuando la app corre, lo hace <strong>aislada</strong> (ver el manual de la sección Aplicaciones): no puede tocar la consola, tus secretos ni tus otras apps.</p>
+</div>
+<details class="deep"><summary>por qué estas reglas no son opcionales</summary><div class="inner">
+<p>Las apps se ejecutan en un marco aislado de <strong>origen opaco</strong> y acceden a datos solo por un canal cerrado de mensajes. Por eso se prohíben cosas como eventos en línea (<code>onclick="…"</code>), <code>eval</code>, <code>document.write</code> o inyectar datos del usuario como HTML. La revisión busca justo esos patrones. Si confirmas una advertencia, asumes el riesgo de ese fragmento concreto.</p>
+</div></details>
+<div class="tip">Resumen: <strong>tú defines, tu IA programa, SecureDoc revisa, prueba y publica.</strong> Siempre puedes volver atrás sin tocar tus datos reales.</div>
+
+</main>
+<footer>SecureDoc — Manual de usuario. Documento de apoyo de la sección <strong>Desarrollo</strong>.</footer>
+</body>
+</html>
