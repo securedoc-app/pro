@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo configurar tu cuenta — SecureDoc</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#1f2937;--muted:#6b7280;--brand:#4f46e5;--brand2:#0ea5e9;--ok:#059669;--warn:#d97706;--line:#e5e7eb}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+header.top{background:linear-gradient(135deg,#4f46e5,#0ea5e9);color:#fff;padding:2.2rem 1.2rem}
+.wrap{max-width:960px;margin:0 auto;padding:0 1.1rem}
+header.top h1{margin:.2rem 0;font-size:1.8rem}
+header.top p{margin:0;opacity:.93}
+.badge-top{display:inline-block;background:rgba(255,255,255,.2);padding:.2rem .7rem;border-radius:999px;font-size:.8rem;margin-bottom:.5rem}
+main{padding:1.4rem 0 3rem}
+h2{margin-top:2.2rem;font-size:1.35rem;border-bottom:2px solid var(--line);padding-bottom:.35rem}
+h3{font-size:1.08rem;margin-top:1.4rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.1rem 1.3rem;margin:1rem 0;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+ol.steps li{position:relative;padding:.6rem 0 .6rem 2.8rem;border-bottom:1px dashed var(--line)}
+ol.steps li:last-child{border-bottom:0}
+ol.steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:.55rem;width:1.9rem;height:1.9rem;background:var(--brand);color:#fff;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.9rem}
+.note,.tip,.warn{border-radius:10px;padding:.8rem 1rem;margin:1rem 0;font-size:.96rem}
+.note{background:#eef2ff;border-left:4px solid var(--brand)}
+.tip{background:#ecfdf5;border-left:4px solid var(--ok)}
+.warn{background:#fffbeb;border-left:4px solid var(--warn)}
+code{background:#eef2ff;padding:.08rem .35rem;border-radius:5px;font-size:.9em}
+details.deep{background:#0f172a;color:#e2e8f0;border-radius:10px;margin:1rem 0;overflow:hidden}
+details.deep>summary{cursor:pointer;padding:.8rem 1rem;background:#1e293b;font-weight:600;list-style:none}
+details.deep>summary::before{content:"\25B8  Profundidad técnica — ";color:#38bdf8;font-weight:700}
+details.deep[open]>summary::before{content:"\25BE  Profundidad técnica — ";color:#38bdf8}
+details.deep .inner{padding:.5rem 1.1rem 1rem}
+details.deep code{background:#334155;color:#e2e8f0}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
+th{background:#f1f5f9}
+.toc{font-size:.95rem;columns:2;column-gap:2rem}
+.toc a{color:var(--brand);text-decoration:none;display:block;padding:.15rem 0}
+.toc a:hover{text-decoration:underline}
+footer{color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 1rem}
+@media(max-width:640px){.toc{columns:1}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<span class="badge-top">Manual de usuario · Sección Configuración</span>
+<h1>Configurar tu cuenta y su seguridad</h1>
+<p>Perfil, token de GitHub, Firebase propio, frase maestra, temas y cierre de sesión: qué hace cada opción y cuándo usarla.</p>
+</div></header>
+<main class="wrap">
+<div class="card toc">
+<a href="#que">1. Qué hay en Configuración</a>
+<a href="#perfil">2. Perfil y alias del catálogo</a>
+<a href="#github">3. Token de GitHub</a>
+<a href="#firebase">4. Firebase del usuario</a>
+<a href="#frase">5. Frase maestra</a>
+<a href="#temas">6. Apariencia y temas</a>
+<a href="#sesion">7. Bloquear y cerrar sesión</a>
+<a href="#peligro">8. Zona de peligro</a>
+</div>
+
+<h2 id="que">1. Qué hay en Configuración</h2>
+<div class="card">
+<p>La sección <strong>Configuración</strong> reúne lo que afecta a tu cuenta completa: tu perfil público, las conexiones que usa SecureDoc (GitHub y tu Firebase), la <strong>frase maestra</strong> que cifra tus secretos, el aspecto visual y las acciones de cierre o retirada.</p>
+</div>
+<div class="note">Casi todo lo de aquí se guarda <strong>cifrado</strong> o como metadatos públicos. La frase maestra y las contraseñas <strong>nunca</strong> se envían al servidor.</div>
+
+<h2 id="perfil">2. Perfil y alias del catálogo</h2>
+<div class="card">
+<p>En la tarjeta de <strong>Perfil</strong> ves tu nombre, tu usuario de GitHub y la foto o logo. Puedes cambiar la foto con el botón de la cámara; se guarda en tu repositorio privado de perfil.</p>
+<p>El <strong>alias del catálogo</strong> es el nombre público que verán otros usuarios cuando publiques una app. <strong>Nunca</strong> se muestra tu correo. Puedes editarlo con <em>Editar</em>; si ya publicaste, el alias nuevo se usará en las próximas publicaciones o actualizaciones.</p>
+</div>
+
+<h2 id="github">3. Token de GitHub</h2>
+<div class="card">
+<p>SecureDoc usa tu token para las acciones que tú decides: crear repositorios de apps o de archivos, publicar bibliotecas, guardar una copia opcional del código y subir archivos. El token se guarda <strong>cifrado con tu frase maestra</strong> y nunca entra en el iframe de una app.</p>
+<ul>
+<li><strong>Cambiar token</strong>: pega uno nuevo de la misma cuenta; SecureDoc comprueba que coincide con tu usuario y que tiene los permisos necesarios.</li>
+<li><strong>Vencimiento</strong>: indica la fecha (o «no vence»). La consola te avisa antes de que caduque.</li>
+<li><strong>Permisos</strong>: token clásico con <code>repo</code>; si quieres borrar repositorios, añade <code>delete_repo</code>; para el flujo de publicación, <code>workflow</code>. En fine-grained: Contents, Administration, Pages, Secrets y Workflows según lo que uses.</li>
+</ul>
+<div class="tip">Publicar una app en SecureDoc <strong>no necesita</strong> que crees repositorios. La copia en GitHub es opcional y se configura desde el menú ⋮ de cada app.</div>
+</div>
+<div class="warn">Si cambias el token, SecureDoc intenta renovar la credencial de los proyectos que ya tienen repositorios. Si alguno falla, puedes reintentarlo desde el menú ⋮ de ese proyecto (<em>Actualizar credencial</em>).</div>
+
+<h2 id="firebase">4. Firebase del usuario</h2>
+<div class="card">
+<p>Las apps guardan sus datos en <strong>tu propio proyecto de Firebase</strong>, no en el de SecureDoc. Aquí pegas su configuración web y, lo más importante, la <strong>proteges</strong>: SecureDoc crea dentro de tu proyecto una cuenta propia (correo y contraseña aleatorios, guardados cifrados) y te muestra las reglas de Firestore que solo dejan pasar a esa cuenta.</p>
+<ol class="steps">
+<li>Pega la configuración web de tu proyecto.</li>
+<li>Pulsa <em>Configurar acceso seguro</em> y sigue los pasos (crear cuenta, comprobar lectura/escritura, pegar reglas).</li>
+<li>Publica las reglas en Firebase Console y vuelve a pulsar <em>Verificar acceso</em>.</li>
+</ol>
+<p>La verificación ahora prueba algo más fuerte: crea una <strong>segunda cuenta desechable</strong> e intenta leer con ella. Si esa cuenta puede leer, tus reglas están abiertas y se te avisa; la cuenta de prueba se borra al terminar.</p>
+</div>
+<div class="note">Si la verificación no puede completarse (registro cerrado, red o un bloqueador), la consola lo dice y <strong>no</strong> muestra el check verde. Nunca se da por protegido sin la prueba.</div>
+
+<h2 id="frase">5. Frase maestra</h2>
+<div class="card">
+<p>La frase maestra cifra tu token de GitHub, la configuración de tu Firebase y los tokens de servicios. <strong>No se guarda en ningún sitio</strong>: si la olvidas, esos secretos no se pueden recuperar.</p>
+<p>La tarjeta <strong>Frase maestra</strong> muestra el estado de protección:</p>
+<ul>
+<li><strong>Protección estándar</strong>: formato anterior (PBKDF2 250.000 iteraciones). Se sigue leyendo sin migrar nada.</li>
+<li><strong>Protección reforzada</strong>: formato nuevo (600.000 iteraciones), con el cifrado atado al salt y a los parámetros.</li>
+</ul>
+<h3>Reforzar protección</h3>
+<p>Re-cifra todos tus secretos con el formato nuevo. Antes de escribir verifica que todo se descifra con la clave nueva; si algo falla, <strong>no se cambia nada</strong>. Deja un <strong>respaldo cifrado del formato anterior</strong> por si necesitas volver atrás. Es opcional: tu cuenta actual funciona igual sin reforzarla.</p>
+<h3>Cambiar frase</h3>
+<p>Pide la frase actual y la nueva, y re-cifra todos tus datos en una sola operación verificada. La frase nueva debe ser fuerte (cuatro o más palabras, o 18+ caracteres con mayúsculas, números y símbolos). Al cambiarla se descarta el respaldo anterior, porque estaba cifrado con la frase vieja.</p>
+<h3>Restaurar o descartar el respaldo</h3>
+<p><em>Restaurar respaldo</em> vuelve al formato anterior (útil si algo falló al reforzar) y <em>Descartar respaldo</em> lo borra. El respaldo conserva el cifrado antiguo: descártalo cuando confirmes que todo funciona.</p>
+</div>
+<div class="warn">Guarda la frase en un lugar seguro. Ni SecureDoc ni nadie puede recuperarla. Tras reforzar o cambiar la frase, una versión <strong>anterior</strong> de la consola no puede leer tu documento: no vuelvas a un build viejo sin restaurar antes el respaldo.</div>
+<details class="deep"><summary>qué se re-cifra exactamente</summary><div class="inner">
+<p>Se recorren los blobs cifrados del documento de usuario (token de GitHub, configuración y cuenta de tu Firebase, tokens de servicios y cualquier otro dato cifrado con la frase). Cada uno se descifra con la clave actual, se vuelve a cifrar con la nueva y se comprueba la ida y vuelta. El <code>salt</code> no cambia (las reglas lo exigen); sí cambian las iteraciones y la validación en el formato nuevo.</p>
+</div></details>
+
+<h2 id="temas">6. Apariencia y temas</h2>
+<div class="card">
+<p>En <strong>Apariencia</strong> eliges un tema de Bootswatch (Bootstrap 5). Hay temas claros y oscuros; se aplica al instante y se guarda <strong>solo en este navegador</strong>, no en tu cuenta. La vista previa muestra botones y avisos para que compares antes de decidir.</p>
+<p>Los temas oscuros adaptan tarjetas, menús, formularios y el botón de cerrar de los modales. Si algo se ve con poco contraste, prueba otro tema o vuelve al de Bootstrap por defecto.</p>
+</div>
+
+<h2 id="sesion">7. Bloquear y cerrar sesión</h2>
+<div class="card">
+<p><strong>Bloquear</strong> borra de la memoria la frase y los secretos descifrados, cierra la sesión de datos de tu Firebase y deja la consola pidiendo la frase otra vez. Úsalo si te alejas del equipo sin cerrar sesión.</p>
+<p><strong>Salir</strong> además cierra tu sesión de Firebase Auth y vuelve al inicio. En ambos casos tus datos y secretos cifrados siguen guardados.</p>
+</div>
+
+<h2 id="peligro">8. Zona de peligro</h2>
+<div class="card">
+<p><strong>Retirarme de SecureDoc</strong> elimina tu cuenta y tus datos cifrados de la plataforma. Es irreversible y exige confirmar tu contraseña y escribir tu correo. Antes de usarlo, descarga cualquier respaldo de datos de apps que necesites conservar.</p>
+<p>Si tienes repositorios de archivos o copias de apps en GitHub, decide qué hacer con ellos: la retirada de la cuenta no borra automáticamente todo tu GitHub. Puedes eliminarlos tú desde GitHub.</p>
+</div>
+<div class="tip">Antes de retirarte, revisa la sección <strong>Aplicaciones</strong>: allí puedes descargar un respaldo de los datos de producción de cada app.</div>
+
+</main>
+<footer>SecureDoc — Manual de usuario. Documento de apoyo de la sección <strong>Configuración</strong>.</footer>
+</body>
+</html>
