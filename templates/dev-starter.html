@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>__NAME__</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; display: grid; place-items: center; min-height: 100vh; background: #f5f7fb; color: #1f2937; }
+    main { background: #fff; border-radius: 16px; padding: 2rem 2.5rem; box-shadow: 0 6px 24px rgba(0,0,0,.08); text-align: center; }
+    code { background: #eef2ff; padding: .1rem .4rem; border-radius: 6px; }
+    .idea { color: #374151; font-size: 1.05rem; max-width: 34rem; margin: .5rem auto 1rem; }
+    .muted { color: #6b7280; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>__NAME__</h1>
+    <p class="idea">__BRIEF__</p>
+    <p class="muted">Esta es la página de inicio de tu proyecto. Aquí empezará a construirse tu aplicación.</p>
+    <p id="hora"></p>
+  </main>
+  <script>
+    // Ejemplo de script en linea: en produccion queda minificado y ofuscado
+    const ahora = new Date().toLocaleString('es');
+    document.getElementById('hora').textContent = 'Cargada el ' + ahora;
+  </script>
+</body>
+</html>
